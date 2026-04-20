@@ -152,6 +152,32 @@ main{max-width:1280px;margin:0 auto;padding:28px 24px;}
 .shield-text{font-size:13px;color:var(--text-muted);line-height:1.5;}
 .error-banner{background:rgba(232,54,42,.1);border:1px solid rgba(232,54,42,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#ff8f8f;margin-bottom:12px;}
 footer{border-top:1px solid var(--border);padding:16px 24px;text-align:center;font-size:12px;color:var(--text-dim);margin-top:40px;}
+
+.agent-wrap{display:flex;flex-direction:column;height:calc(100vh - 180px);min-height:500px;max-height:800px;}
+.agent-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px 12px 0 0;}
+.msg{max-width:82%;display:flex;flex-direction:column;gap:4px;}
+.msg.user{align-self:flex-end;align-items:flex-end;}
+.msg.assistant{align-self:flex-start;align-items:flex-start;}
+.msg-bubble{padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.6;}
+.msg.user .msg-bubble{background:var(--mammoth-blue);color:#fff;border-radius:12px 12px 0 12px;}
+.msg.assistant .msg-bubble{background:var(--surface2);color:var(--text);border-radius:12px 12px 12px 0;border:1px solid var(--border);}
+.msg.assistant .msg-bubble strong{color:var(--gold);}
+.msg-time{font-size:10px;color:var(--text-dim);}
+.agent-input-row{display:flex;gap:10px;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:12px;}
+.agent-input{flex:1;background:var(--surface2);border:1px solid var(--border-bright);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;font-family:'Barlow',sans-serif;resize:none;min-height:44px;max-height:120px;}
+.agent-input:focus{outline:none;border-color:var(--gold);}
+.agent-input::placeholder{color:var(--text-dim);}
+.agent-send-btn{background:var(--gold);color:#000;border:none;border-radius:8px;padding:10px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;align-self:flex-end;white-space:nowrap;}
+.agent-send-btn:hover{background:var(--gold-light);}
+.agent-send-btn:disabled{opacity:.4;cursor:default;}
+.agent-suggestions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.suggestion-chip{background:var(--surface);border:1px solid var(--border-bright);color:var(--text-muted);font-size:12px;padding:6px 12px;border-radius:20px;cursor:pointer;transition:all .2s;font-family:'Barlow',sans-serif;}
+.suggestion-chip:hover{border-color:var(--gold);color:var(--gold);}
+.typing-indicator .msg-bubble{display:flex;align-items:center;gap:6px;padding:12px 16px;}
+.typing-dots span{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);animation:dot-bounce 1.4s ease-in-out infinite;margin:0 1px;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+.agent-status{font-size:11px;color:var(--text-dim);text-align:center;padding:6px;letter-spacing:.04em;}
 </style>
 </head>
 <body>
@@ -184,6 +210,7 @@ footer{border-top:1px solid var(--border);padding:16px 24px;text-align:center;fo
     <button class="nav-tab" onclick="switchTab('knights',this)">Knights Weaknesses</button>
     <button class="nav-tab" onclick="switchTab('shields',this)">Mammoth Shields</button>
     <button class="nav-tab" onclick="switchTab('series',this)">Series Tracker</button>
+    <button class="nav-tab" onclick="switchTab('agent',this)" style="color:var(--gold)">💬 Ask the Agent</button>
   </div>
 </div>
 
@@ -341,6 +368,42 @@ footer{border-top:1px solid var(--border);padding:16px 24px;text-align:center;fo
     </div>
     <div class="ai-content" id="ai-series-content">
       <div class="thinking"><span>Click "Predict Series" for AI series forecast based on Game 1 data.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- AGENT TAB -->
+<div id="tab-agent" class="tab-content">
+  <div style="margin-bottom:14px">
+    <div class="section-title">War Room Agent</div>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Ask anything about the game, series, or tactics. The agent has live ESPN score data and full knowledge of both teams.</p>
+    <div class="agent-suggestions" id="agent-suggestions">
+      <div class="suggestion-chip" onclick="sendSuggestion(this)">Who scored tonight?</div>
+      <div class="suggestion-chip" onclick="sendSuggestion(this)">What's the shot count?</div>
+      <div class="suggestion-chip" onclick="sendSuggestion(this)">Should Tourigny pull Vejmelka?</div>
+      <div class="suggestion-chip" onclick="sendSuggestion(this)">Best line to use in OT?</div>
+      <div class="suggestion-chip" onclick="sendSuggestion(this)">How is Eichel playing tonight?</div>
+      <div class="suggestion-chip" onclick="sendSuggestion(this)">What's Utah's power play doing?</div>
+      <div class="suggestion-chip" onclick="sendSuggestion(this)">What adjustments should Tourigny make?</div>
+      <div class="suggestion-chip" onclick="sendSuggestion(this)">Is Vejmelka struggling?</div>
+      <div class="suggestion-chip" onclick="sendSuggestion(this)">Will Utah win this series?</div>
+      <div class="suggestion-chip" onclick="sendSuggestion(this)">What's Vegas doing differently under Torts?</div>
+    </div>
+  </div>
+  <div class="agent-wrap">
+    <div class="agent-messages" id="agent-messages">
+      <div class="msg assistant">
+        <div class="msg-bubble">
+          Hey! I'm your <strong>Mammoth War Room Agent</strong>. I have live ESPN game data and deep knowledge of both teams in this series.<br><br>
+          Ask me anything — current score, tactical questions, player matchups, what adjustments to make, or how the series is trending. What do you want to know?
+        </div>
+        <div class="msg-time">Ready</div>
+      </div>
+    </div>
+    <div class="agent-status" id="agent-status">Live ESPN data · Claude AI · Conversation memory active</div>
+    <div class="agent-input-row">
+      <textarea class="agent-input" id="agent-input" placeholder="Ask about the game, tactics, players..." rows="1" onkeydown="agentKeydown(event)"></textarea>
+      <button class="agent-send-btn" id="agent-send-btn" onclick="agentSend()">Send ↑</button>
     </div>
   </div>
 </div>
@@ -646,6 +709,135 @@ function buildFormTables() {
     }).join('');
   });
 }
+
+// ===================== AGENT =====================
+var agentHistory = [];
+var agentBusy = false;
+
+var AGENT_SYSTEM = 'You are the Utah Mammoth War Room Agent — an elite NHL analyst embedded with the Mammoth coaching staff for the 2026 Stanley Cup Playoffs. ' +
+  'You have live ESPN data and deep knowledge of this series. You answer questions about the live game, tactics, players, and series strategy. ' +
+  'Be direct, confident, and specific. Use player names freely. Give real tactical opinions — you are a trusted analyst, not a neutral commentator. ' +
+  'You are pro-Utah but honest about weaknesses. Keep answers focused and under 150 words unless a detailed breakdown is requested. ' +
+  'Use <strong> tags for player names and key numbers. Write in clean HTML — no markdown, no asterisks. ' +
+  'SERIES CONTEXT: Utah Mammoth (Wild Card #1, 43-28-11) vs Vegas Golden Knights (Pacific #1, 39-26-17). ' +
+  'Utah won season series 2-1, outscored VGK 10-5. Mar 19: Utah shut out VGK 4-0. ' +
+  'VGK used 4 goalies, Schmid (.893 SV%) out since Mar 21, Karlsson out injured. ' +
+  'Utah: Keller 88pts, Schmaltz 74pts, Guenther 40G, Cooley 24G, Peterka 25G, Crouse 24G, Sergachev 59pts (Cup 2025), Schmidt (Cup 2025), Vejmelka 38W. ' +
+  'VGK: Eichel 90pts, Marner 80pts, Stone 73pts, Dorofeyev 37G, Barbashev 61pts. ' +
+  'UTA PP 18th, VGK PP 6th (major threat), VGK PK 7th. ' +
+  'Tourigny identity: speed and transition. Tortorella took over VGK at game 74, went 7-0-1. ' +
+  '10 Utah players making playoff debut. VGK has 11 players from 2023 Cup run.';
+
+function agentKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); agentSend(); }
+}
+
+function sendSuggestion(el) {
+  var inp = document.getElementById('agent-input');
+  if (inp) { inp.value = el.textContent; agentSend(); }
+}
+
+function agentSend() {
+  if (agentBusy) return;
+  if (!apiKey) { document.getElementById('api-setup-banner').style.display = 'block'; return; }
+  var inp = document.getElementById('agent-input');
+  if (!inp) return;
+  var text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  inp.style.height = 'auto';
+
+  appendMsg('user', text);
+  agentHistory.push({ role: 'user', content: text });
+
+  var liveCtx = getGameContext();
+  // Inject live context into the most recent user message for the API call
+  var messagesForApi = agentHistory.slice(0, -1).concat([{
+    role: 'user',
+    content: '[LIVE ESPN DATA: ' + liveCtx + '] ' + text
+  }]);
+
+  showTyping();
+  agentBusy = true;
+  var sendBtn = document.getElementById('agent-send-btn');
+  if (sendBtn) sendBtn.disabled = true;
+  var statusEl = document.getElementById('agent-status');
+  if (statusEl) statusEl.textContent = 'Agent is thinking...';
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 600,
+      system: AGENT_SYSTEM,
+      messages: messagesForApi
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    removeTyping();
+    if (data.error) {
+      appendMsg('assistant', '<span style="color:var(--danger)">Error: ' + (data.error.message||'Unknown error') + '</span>');
+      agentHistory.pop();
+      return;
+    }
+    var text = '';
+    if (Array.isArray(data.content)) data.content.forEach(function(b){ if (b.text) text += b.text; });
+    if (!text) text = 'No response. Try again.';
+    // Convert plain text to HTML if needed
+    var html = text.includes('<') ? text : text.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+    appendMsg('assistant', html);
+    agentHistory.push({ role: 'assistant', content: text });
+    // Keep history from growing too long (last 20 messages)
+    if (agentHistory.length > 20) agentHistory = agentHistory.slice(-20);
+  })
+  .catch(function(err){
+    removeTyping();
+    appendMsg('assistant', '<span style="color:var(--danger)">Connection error: ' + err.message + '</span>');
+    agentHistory.pop();
+  })
+  .finally(function(){
+    agentBusy = false;
+    var sb = document.getElementById('agent-send-btn');
+    if (sb) sb.disabled = false;
+    var st = document.getElementById('agent-status');
+    if (st) st.textContent = 'Live ESPN data · Claude AI · Conversation memory active';
+  });
+}
+
+function appendMsg(role, html) {
+  var feed = document.getElementById('agent-messages');
+  if (!feed) return;
+  var now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  var div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.innerHTML = '<div class="msg-bubble">' + html + '</div><div class="msg-time">' + now + '</div>';
+  feed.appendChild(div);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function showTyping() {
+  var feed = document.getElementById('agent-messages');
+  if (!feed) return;
+  var div = document.createElement('div');
+  div.className = 'msg assistant typing-indicator';
+  div.id = 'typing-indicator';
+  div.innerHTML = '<div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+  feed.appendChild(div);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function removeTyping() {
+  var el = document.getElementById('typing-indicator');
+  if (el) el.remove();
+}
+
 </script>
 </body>
 </html>
