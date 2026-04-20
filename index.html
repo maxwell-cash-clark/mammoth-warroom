@@ -4,988 +4,1092 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Utah Mammoth War Room — 2026 Playoffs</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--mammoth-blue:#1B4B8A;--mammoth-light:#3A7BD5;--mammoth-dark:#0a2448;--gold:#C8A84B;--gold-light:#E8C86C;--danger:#E8362A;--success:#2ECC71;--warn:#F39C12;--bg:#08101E;--surface:#0F1C2E;--surface2:#162438;--surface3:#1D2F44;--text:#EEF4FF;--text-muted:#7A99BB;--text-dim:#3D5A7A;--border:rgba(255,255,255,0.07);--border-bright:rgba(255,255,255,0.15);}
+:root{--blue:#1B4B8A;--light:#3A7BD5;--dark:#0a2448;--gold:#C8A84B;--goldlt:#E8C86C;--red:#E8362A;--green:#2ECC71;--warn:#F39C12;--bg:#08101E;--s1:#0F1C2E;--s2:#162438;--s3:#1D2F44;--txt:#EEF4FF;--muted:#7A99BB;--dim:#3D5A7A;--bdr:rgba(255,255,255,0.07);--bdrb:rgba(255,255,255,0.15);}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
-header{background:linear-gradient(135deg,var(--mammoth-dark),#0d1e35);border-bottom:1px solid var(--border-bright);padding:0 24px;position:sticky;top:0;z-index:100;}
-.header-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:16px;height:64px;}
-.mammoth-icon{width:42px;height:42px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
-.brand-text h1{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;letter-spacing:.05em;color:var(--text);text-transform:uppercase;line-height:1;}
-.brand-text p{font-size:11px;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;}
-.header-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
-.live-pill{background:var(--danger);color:#fff;font-size:10px;font-weight:700;letter-spacing:.15em;padding:3px 10px;border-radius:20px;text-transform:uppercase;animation:pulse-pill 2s ease-in-out infinite;}
-@keyframes pulse-pill{0%,100%{opacity:1;}50%{opacity:.6;}}
-.score-badge{background:var(--surface2);border:1px solid var(--border-bright);border-radius:10px;padding:6px 14px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--text);letter-spacing:.05em;}
-.refresh-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px;}
-.refresh-btn:hover{border-color:var(--mammoth-light);color:var(--text);}
+body{background:var(--bg);color:var(--txt);font-family:Barlow,sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
+/* HEADER */
+header{background:linear-gradient(135deg,var(--dark),#0d1e35);border-bottom:1px solid var(--bdrb);padding:0 24px;position:sticky;top:0;z-index:100;}
+.hi{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:16px;height:64px;}
+.logo{width:42px;height:42px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.brand h1{font-family:"Barlow Condensed",sans-serif;font-size:20px;font-weight:900;letter-spacing:.05em;color:var(--txt);text-transform:uppercase;line-height:1;}
+.brand p{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
+.hr{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.livepill{background:var(--red);color:#fff;font-size:10px;font-weight:700;letter-spacing:.15em;padding:3px 10px;border-radius:20px;text-transform:uppercase;animation:ppulse 2s ease-in-out infinite;}
+@keyframes ppulse{0%,100%{opacity:1;}50%{opacity:.6;}}
+.scorebadge{background:var(--s2);border:1px solid var(--bdrb);border-radius:10px;padding:6px 14px;font-family:"Barlow Condensed",sans-serif;font-size:16px;font-weight:700;color:var(--txt);letter-spacing:.05em;}
+.rbtn{background:var(--s2);border:1px solid var(--bdr);color:var(--muted);border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:Barlow,sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px;}
+.rbtn:hover{border-color:var(--light);color:var(--txt);}
 .spin{animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.nav-bar{background:var(--surface);border-bottom:1px solid var(--border);}
-.nav-inner{max-width:1280px;margin:0 auto;display:flex;padding:0 24px;gap:2px;overflow-x:auto;}
-.nav-tab{padding:12px 18px;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Barlow',sans-serif;}
-.nav-tab:hover{color:var(--text);}
-.nav-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+/* NAV */
+.nav{background:var(--s1);border-bottom:1px solid var(--bdr);}
+.ni{max-width:1280px;margin:0 auto;display:flex;padding:0 24px;gap:2px;overflow-x:auto;}
+.ntab{padding:12px 16px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:Barlow,sans-serif;}
+.ntab:hover{color:var(--txt);}
+.ntab.active{color:var(--gold);border-bottom-color:var(--gold);}
+/* MAIN */
 main{max-width:1280px;margin:0 auto;padding:28px 24px;}
-.tab-content{display:none;}
-.tab-content.active{display:block;}
-.scoreboard{background:linear-gradient(135deg,var(--mammoth-dark),var(--surface2));border:1px solid var(--border-bright);border-radius:16px;padding:24px 32px;margin-bottom:24px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;}
-.team-side{display:flex;align-items:center;gap:16px;}
-.team-side.right{flex-direction:row-reverse;text-align:right;}
-.team-logo-wrap{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
-.team-name-big{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--text);}
-.team-record{font-size:12px;color:var(--text-muted);margin-top:2px;}
-.score-center{text-align:center;}
-.score-display{font-family:'Barlow Condensed',sans-serif;font-size:52px;font-weight:900;letter-spacing:.05em;line-height:1;}
-.score-uta{color:var(--gold);}
-.score-vgk{color:var(--text);}
-.score-sep{color:var(--text-dim);margin:0 6px;}
-.game-status-label{font-size:13px;color:var(--danger);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
-.period-indicator{font-size:11px;color:var(--text-muted);margin-top:2px;}
-@media(max-width:700px){.scoreboard{grid-template-columns:1fr;text-align:center;}.team-side.right{flex-direction:row;}.score-badge{display:none;}}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
-@media(max-width:900px){.grid-3,.grid-2{grid-template-columns:1fr;}}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
-.card-header{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-.card-header .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;}
-.stat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
-.stat-row:last-child{border-bottom:none;}
-.stat-label{color:var(--text-muted);}
-.stat-value{font-weight:600;color:var(--text);}
-.stat-value.good{color:var(--success);}
-.stat-value.bad{color:var(--danger);}
-.stat-value.warn{color:var(--warn);}
-.stat-value.gold{color:var(--gold);}
-.ai-panel{background:linear-gradient(135deg,var(--surface),#0e1f35);border:1px solid rgba(200,168,75,.25);border-radius:12px;padding:20px;margin-bottom:20px;position:relative;overflow:hidden;}
-.ai-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--mammoth-light),var(--gold));}
-.ai-panel-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
-.ai-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--gold),var(--mammoth-light));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
-.ai-title{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);}
-.ai-timestamp{font-size:11px;color:var(--text-dim);margin-left:auto;}
-.ai-content{font-size:14px;line-height:1.7;color:var(--text);min-height:60px;}
-.ai-content p{margin-bottom:10px;}
-.ai-content p:last-child{margin-bottom:0;}
-.ai-content strong{color:var(--gold);font-weight:600;}
-.thinking{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:13px;}
-.thinking-dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);animation:dot-bounce 1.4s ease-in-out infinite;margin:0 2px;}
-.thinking-dots span:nth-child(2){animation-delay:.2s;}
-.thinking-dots span:nth-child(3){animation-delay:.4s;}
-@keyframes dot-bounce{0%,80%,100%{transform:translateY(0);opacity:.4;}40%{transform:translateY(-6px);opacity:1;}}
-.insight{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
-.insight:last-child{border-bottom:none;}
-.insight-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px;}
-.insight-icon.green{background:rgba(46,204,113,.15);color:var(--success);}
-.insight-icon.red{background:rgba(232,54,42,.15);color:var(--danger);}
-.insight-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
-.insight-body{font-size:12px;color:var(--text-muted);line-height:1.5;}
-.player-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px;margin-bottom:20px;}
-.player-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
-.player-card:hover,.player-card.selected{border-color:var(--gold);background:var(--surface2);}
-.player-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--card-accent,transparent);}
-.player-initials-sm{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px;}
-.player-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;}
-.player-pos{font-size:11px;color:var(--text-muted);}
-.player-stat-line{font-size:12px;color:var(--text-muted);margin-top:6px;}
-.threat-meter{margin-top:8px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;}
-.threat-fill{height:100%;border-radius:2px;}
-.threat-label-row{display:flex;justify-content:space-between;margin-top:4px;}
-.threat-label-row span{font-size:10px;color:var(--text-dim);}
-.detail-panel{background:var(--surface);border:1px solid var(--border-bright);border-radius:14px;padding:22px 24px;margin-top:16px;}
-.detail-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);}
-.detail-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;flex-shrink:0;}
-.detail-name{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;text-transform:uppercase;color:var(--text);letter-spacing:.04em;}
-.detail-sub{font-size:12px;color:var(--text-muted);}
-.threat-score-box{margin-left:auto;text-align:center;}
-.threat-num{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;line-height:1;}
-.threat-lbl{font-size:10px;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-@media(max-width:700px){.two-col{grid-template-columns:1fr;}}
-.col-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;}
-.col-title.red{color:var(--danger);}
-.col-title.green{color:var(--success);}
-.bullet-item{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-muted);line-height:1.4;}
-.bullet-item:last-child{border-bottom:none;}
+.tab{display:none;}
+.tab.active{display:block;}
+/* SCOREBOARD */
+.sb{background:linear-gradient(135deg,var(--dark),var(--s2));border:1px solid var(--bdrb);border-radius:16px;padding:24px 32px;margin-bottom:24px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;}
+.ts{display:flex;align-items:center;gap:16px;}
+.ts.right{flex-direction:row-reverse;text-align:right;}
+.tlogo{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+.tname{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--txt);}
+.trec{font-size:12px;color:var(--muted);margin-top:2px;}
+.sc{text-align:center;}
+.scores{font-family:"Barlow Condensed",sans-serif;font-size:52px;font-weight:900;letter-spacing:.05em;line-height:1;}
+.suta{color:var(--gold);}
+.svgk{color:var(--txt);}
+.ssep{color:var(--dim);margin:0 6px;}
+.gstatus{font-size:13px;color:var(--red);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
+.period{font-size:11px;color:var(--muted);margin-top:2px;}
+@media(max-width:700px){.sb{grid-template-columns:1fr;text-align:center;}.ts.right{flex-direction:row;}.scorebadge{display:none;}}
+/* GRIDS */
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+@media(max-width:900px){.g3,.g2{grid-template-columns:1fr;}}
+/* CARDS */
+.card{background:var(--s1);border:1px solid var(--bdr);border-radius:12px;padding:18px 20px;}
+.cardh{font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px;justify-content:space-between;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+.ts2{font-size:10px;color:var(--dim);}
+/* STAT ROWS */
+.sr{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:13px;}
+.sr:last-child{border-bottom:none;}
+.sl{color:var(--muted);}
+.sv{font-weight:600;color:var(--txt);}
+.sv.good{color:var(--green);}
+.sv.bad{color:var(--red);}
+.sv.warn{color:var(--warn);}
+.sv.gold{color:var(--gold);}
+/* AI PANEL */
+.aip{background:linear-gradient(135deg,var(--s1),#0e1f35);border:1px solid rgba(200,168,75,.25);border-radius:12px;padding:20px;margin-bottom:20px;position:relative;overflow:hidden;}
+.aip::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--light),var(--gold));}
+.aiph{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.aiicon{width:30px;height:30px;background:linear-gradient(135deg,var(--gold),var(--light));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.aititle{font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);}
+.aits{font-size:11px;color:var(--dim);margin-left:auto;}
+.aic{font-size:14px;line-height:1.7;color:var(--txt);min-height:60px;}
+.aic p{margin-bottom:10px;}
+.aic p:last-child{margin-bottom:0;}
+.aic strong{color:var(--gold);font-weight:600;}
+.thinking{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;}
+.tdots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);animation:db 1.4s ease-in-out infinite;margin:0 2px;}
+.tdots span:nth-child(2){animation-delay:.2s;}
+.tdots span:nth-child(3){animation-delay:.4s;}
+@keyframes db{0%,80%,100%{transform:translateY(0);opacity:.4;}40%{transform:translateY(-6px);opacity:1;}}
+/* INSIGHT */
+.ins{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--bdr);}
+.ins:last-child{border-bottom:none;}
+.insicon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px;}
+.insicon.green{background:rgba(46,204,113,.15);color:var(--green);}
+.insicon.red{background:rgba(232,54,42,.15);color:var(--red);}
+.institle{font-size:13px;font-weight:600;color:var(--txt);margin-bottom:2px;}
+.insbody{font-size:12px;color:var(--muted);line-height:1.5;}
+/* PLAYER CARDS */
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px;margin-bottom:20px;}
+.pc{background:var(--s1);border:1px solid var(--bdr);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.pc:hover,.pc.sel{border-color:var(--gold);background:var(--s2);}
+.pc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--ca,transparent);}
+.pi{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;margin-bottom:8px;}
+.pname{font-size:14px;font-weight:600;color:var(--txt);margin-bottom:2px;}
+.ppos{font-size:11px;color:var(--muted);}
+.pstat{font-size:12px;color:var(--muted);margin-top:6px;}
+.playoffnote{font-size:11px;margin-top:6px;padding:4px 8px;border-radius:4px;font-style:italic;}
+.playoffnote.good{background:rgba(46,204,113,.1);color:#7EE09A;}
+.playoffnote.bad{background:rgba(232,54,42,.1);color:#FF8F8F;}
+.playoffnote.warn{background:rgba(243,156,18,.1);color:#F4C76D;}
+.thrm{margin-top:8px;height:3px;background:var(--s3);border-radius:2px;overflow:hidden;}
+.thrf{height:100%;border-radius:2px;}
+.thrl{display:flex;justify-content:space-between;margin-top:4px;}
+.thrl span{font-size:10px;color:var(--dim);}
+/* DETAIL PANEL */
+.dp{background:var(--s1);border:1px solid var(--bdrb);border-radius:14px;padding:22px 24px;margin-top:16px;}
+.dtop{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--bdr);}
+.dav{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:700;flex-shrink:0;}
+.dname{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:900;text-transform:uppercase;color:var(--txt);letter-spacing:.04em;}
+.dsub{font-size:12px;color:var(--muted);}
+.dplayoff{font-size:12px;margin-top:6px;padding:5px 10px;border-radius:6px;border:1px solid rgba(200,168,75,.3);color:var(--gold);background:rgba(200,168,75,.08);}
+.tscbox{margin-left:auto;text-align:center;}
+.tsnum{font-family:"Barlow Condensed",sans-serif;font-size:36px;font-weight:900;line-height:1;}
+.tslbl{font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:700px){.twocol{grid-template-columns:1fr;}}
+.coltitle{font-family:"Barlow Condensed",sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;}
+.coltitle.red{color:var(--red);}
+.coltitle.green{color:var(--green);}
+.bi{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--bdr);font-size:13px;color:var(--muted);line-height:1.4;}
+.bi:last-child{border-bottom:none;}
 .bul{flex-shrink:0;margin-top:2px;font-size:10px;}
-.bul.red{color:var(--danger);}
-.bul.green{color:var(--success);}
-.series-games{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
-.game-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;min-width:110px;text-align:center;font-size:12px;color:var(--text-muted);}
-.game-box.uta-win{border-color:var(--gold);}
-.game-box.vgk-win{border-color:#666;}
-.game-box.live-game{border-color:var(--danger);animation:border-pulse 2s ease-in-out infinite;}
-@keyframes border-pulse{0%,100%{border-color:var(--danger);box-shadow:0 0 0 0 rgba(232,54,42,0);}50%{border-color:#ff6b6b;box-shadow:0 0 8px 2px rgba(232,54,42,.3);}}
-.game-num{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px;}
-.game-score-big{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;letter-spacing:.04em;}
-.analyze-btn{background:linear-gradient(135deg,var(--gold),#A88832);color:#000;border:none;border-radius:10px;padding:10px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;}
-.analyze-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(200,168,75,.4);}
-.analyze-btn:disabled{opacity:.5;cursor:default;transform:none;}
-.analyze-btn.sm{padding:7px 14px;font-size:12px;}
-.api-setup{background:var(--surface);border:1px solid rgba(200,168,75,.3);border-radius:14px;padding:28px;text-align:center;margin-bottom:20px;}
-.api-setup h2{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
-.api-setup p{font-size:13px;color:var(--text-muted);margin-bottom:16px;}
-.api-input-row{display:flex;gap:10px;max-width:500px;margin:0 auto;}
-.api-input{flex:1;background:var(--surface2);border:1px solid var(--border-bright);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;font-family:'Barlow',sans-serif;}
-.api-input:focus{outline:none;border-color:var(--gold);}
-.api-input::placeholder{color:var(--text-dim);}
-.api-save-btn{background:var(--gold);color:#000;border:none;border-radius:8px;padding:10px 18px;font-weight:700;font-size:13px;cursor:pointer;font-family:'Barlow',sans-serif;white-space:nowrap;}
-.api-save-btn:hover{background:var(--gold-light);}
-.section-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
-.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.bul.red{color:var(--red);}
+.bul.green{color:var(--green);}
+/* SERIES TRACKER */
+.sgames{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+.gbox{background:var(--s2);border:1px solid var(--bdr);border-radius:8px;padding:10px 14px;min-width:110px;text-align:center;font-size:12px;color:var(--muted);}
+.gbox.uw{border-color:var(--gold);}
+.gbox.vw{border-color:#666;}
+.gbox.lg{border-color:var(--red);animation:bpulse 2s ease-in-out infinite;}
+@keyframes bpulse{0%,100%{border-color:var(--red);box-shadow:0 0 0 0 rgba(232,54,42,0);}50%{border-color:#ff6b6b;box-shadow:0 0 8px 2px rgba(232,54,42,.3);}}
+.gnum{font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;}
+.gscbig{font-family:"Barlow Condensed",sans-serif;font-size:20px;font-weight:900;letter-spacing:.04em;}
+/* SHIELD */
+.shi{background:var(--s1);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;margin-bottom:10px;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:700px){.shi{grid-template-columns:1fr;}}
+.shlbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+.shlbl.red{color:var(--red);}
+.shlbl.green{color:var(--green);}
+.shtxt{font-size:13px;color:var(--muted);line-height:1.5;}
+.playoff-update{font-size:12px;margin-top:6px;padding:5px 8px;border-radius:5px;background:rgba(200,168,75,.08);border-left:2px solid var(--gold);color:var(--gold);}
+/* ANALYZE BUTTON */
+.abtn{background:linear-gradient(135deg,var(--gold),#A88832);color:#000;border:none;border-radius:10px;padding:10px 18px;font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;}
+.abtn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(200,168,75,.4);}
+.abtn:disabled{opacity:.5;cursor:default;transform:none;}
+.abtn.sm{padding:7px 14px;font-size:12px;}
+/* API SETUP */
+.apib{background:var(--s1);border:1px solid rgba(200,168,75,.3);border-radius:14px;padding:28px;text-align:center;margin-bottom:20px;}
+.apib h2{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.apib p{font-size:13px;color:var(--muted);margin-bottom:16px;}
+.apir{display:flex;gap:10px;max-width:500px;margin:0 auto;}
+.apii{flex:1;background:var(--s2);border:1px solid var(--bdrb);border-radius:8px;padding:10px 14px;color:var(--txt);font-size:13px;font-family:Barlow,sans-serif;}
+.apii:focus{outline:none;border-color:var(--gold);}
+.apii::placeholder{color:var(--dim);}
+.apis{background:var(--gold);color:#000;border:none;border-radius:8px;padding:10px 18px;font-weight:700;font-size:13px;cursor:pointer;font-family:Barlow,sans-serif;white-space:nowrap;}
+/* SECTION TITLE */
+.stitle{font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--txt);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.stitle::after{content:'';flex:1;height:1px;background:var(--bdr);}
+/* CHIP */
 .chip{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;}
-.chip.red{background:rgba(232,54,42,.15);color:#ff8f8f;}
-.chip.green{background:rgba(46,204,113,.15);color:var(--success);}
+.chip.r{background:rgba(232,54,42,.15);color:#ff8f8f;}
+.chip.g{background:rgba(46,204,113,.15);color:var(--green);}
 .chip.gold{background:rgba(200,168,75,.15);color:var(--gold);}
-.highlight-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
-.highlight-item:last-child{border-bottom:none;}
-.highlight-time{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--text-muted);min-width:50px;flex-shrink:0;}
-.highlight-text{font-size:13px;color:var(--text);line-height:1.5;}
-.highlight-text strong{color:var(--gold);}
-.highlight-team{font-size:11px;color:var(--text-muted);margin-top:2px;}
-.shield-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-@media(max-width:700px){.shield-item{grid-template-columns:1fr;}}
-.shield-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
-.shield-label.red{color:var(--danger);}
-.shield-label.green{color:var(--success);}
-.shield-text{font-size:13px;color:var(--text-muted);line-height:1.5;}
-.error-banner{background:rgba(232,54,42,.1);border:1px solid rgba(232,54,42,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#ff8f8f;margin-bottom:12px;}
-footer{border-top:1px solid var(--border);padding:16px 24px;text-align:center;font-size:12px;color:var(--text-dim);margin-top:40px;}
-
-.agent-wrap{display:flex;flex-direction:column;height:calc(100vh - 180px);min-height:500px;max-height:800px;}
-.agent-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px 12px 0 0;}
+/* HIGHLIGHTS */
+.hli{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--bdr);}
+.hli:last-child{border-bottom:none;}
+.hlt{font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:700;color:var(--muted);min-width:50px;flex-shrink:0;}
+.hltxt{font-size:13px;color:var(--txt);line-height:1.5;}
+.hltxt strong{color:var(--gold);}
+.hlteam{font-size:11px;color:var(--muted);margin-top:2px;}
+/* AGENT */
+.agwrap{display:flex;flex-direction:column;height:calc(100vh - 200px);min-height:480px;max-height:780px;}
+.agmsg{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:var(--s1);border:1px solid var(--bdr);border-radius:12px 12px 0 0;}
 .msg{max-width:82%;display:flex;flex-direction:column;gap:4px;}
 .msg.user{align-self:flex-end;align-items:flex-end;}
 .msg.assistant{align-self:flex-start;align-items:flex-start;}
-.msg-bubble{padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.6;}
-.msg.user .msg-bubble{background:var(--mammoth-blue);color:#fff;border-radius:12px 12px 0 12px;}
-.msg.assistant .msg-bubble{background:var(--surface2);color:var(--text);border-radius:12px 12px 12px 0;border:1px solid var(--border);}
-.msg.assistant .msg-bubble strong{color:var(--gold);}
-.msg-time{font-size:10px;color:var(--text-dim);}
-.agent-input-row{display:flex;gap:10px;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:12px;}
-.agent-input{flex:1;background:var(--surface2);border:1px solid var(--border-bright);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;font-family:'Barlow',sans-serif;resize:none;min-height:44px;max-height:120px;}
-.agent-input:focus{outline:none;border-color:var(--gold);}
-.agent-input::placeholder{color:var(--text-dim);}
-.agent-send-btn{background:var(--gold);color:#000;border:none;border-radius:8px;padding:10px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;align-self:flex-end;white-space:nowrap;}
-.agent-send-btn:hover{background:var(--gold-light);}
-.agent-send-btn:disabled{opacity:.4;cursor:default;}
-.agent-suggestions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
-.suggestion-chip{background:var(--surface);border:1px solid var(--border-bright);color:var(--text-muted);font-size:12px;padding:6px 12px;border-radius:20px;cursor:pointer;transition:all .2s;font-family:'Barlow',sans-serif;}
-.suggestion-chip:hover{border-color:var(--gold);color:var(--gold);}
-.typing-indicator .msg-bubble{display:flex;align-items:center;gap:6px;padding:12px 16px;}
-.typing-dots span{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);animation:dot-bounce 1.4s ease-in-out infinite;margin:0 1px;}
-.typing-dots span:nth-child(2){animation-delay:.2s;}
-.typing-dots span:nth-child(3){animation-delay:.4s;}
-.agent-status{font-size:11px;color:var(--text-dim);text-align:center;padding:6px;letter-spacing:.04em;}
+.mbub{padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.6;}
+.msg.user .mbub{background:var(--blue);color:#fff;border-radius:12px 12px 0 12px;}
+.msg.assistant .mbub{background:var(--s2);color:var(--txt);border-radius:12px 12px 12px 0;border:1px solid var(--bdr);}
+.msg.assistant .mbub strong{color:var(--gold);}
+.mtime{font-size:10px;color:var(--dim);}
+.agir{display:flex;gap:10px;background:var(--s1);border:1px solid var(--bdr);border-top:none;border-radius:0 0 12px 12px;padding:12px;}
+.aginp{flex:1;background:var(--s2);border:1px solid var(--bdrb);border-radius:8px;padding:10px 14px;color:var(--txt);font-size:14px;font-family:Barlow,sans-serif;resize:none;min-height:44px;max-height:120px;}
+.aginp:focus{outline:none;border-color:var(--gold);}
+.aginp::placeholder{color:var(--dim);}
+.agsend{background:var(--gold);color:#000;border:none;border-radius:8px;padding:10px 18px;font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;align-self:flex-end;white-space:nowrap;}
+.agsend:hover{background:var(--goldlt);}
+.agsend:disabled{opacity:.4;cursor:default;}
+.agst{font-size:11px;color:var(--dim);text-align:center;padding:6px;letter-spacing:.04em;}
+.sugchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.sug{background:var(--s1);border:1px solid var(--bdrb);color:var(--muted);font-size:12px;padding:6px 12px;border-radius:20px;cursor:pointer;transition:all .2s;font-family:Barlow,sans-serif;}
+.sug:hover{border-color:var(--gold);color:var(--gold);}
+/* ERROR */
+.errbanner{background:rgba(232,54,42,.1);border:1px solid rgba(232,54,42,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#ff8f8f;margin-bottom:12px;}
+footer{border-top:1px solid var(--bdr);padding:16px 24px;text-align:center;font-size:12px;color:var(--dim);margin-top:40px;}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="header-inner">
-    <div class="mammoth-icon">🦣</div>
-    <div class="brand-text">
-      <h1>Mammoth War Room</h1>
-      <p>2026 Stanley Cup Playoffs · Round 1</p>
-    </div>
-    <div class="header-right">
-      <div class="live-pill" id="live-pill">● LIVE</div>
-      <div class="score-badge" id="header-score">UTA — VGK</div>
-      <button class="refresh-btn" onclick="refreshAll()">
-        <svg id="refresh-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M10.5 6A4.5 4.5 0 1 1 6 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M10.5 1.5V4.5H7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+  <div class="hi">
+    <div class="logo">🦣</div>
+    <div class="brand"><h1>Mammoth War Room</h1><p>2026 Stanley Cup Playoffs &middot; Round 1</p></div>
+    <div class="hr">
+      <div class="livepill" id="livepill">&bull; LIVE</div>
+      <div class="scorebadge" id="hdrscr">UTA &mdash; VGK</div>
+      <button class="rbtn" onclick="refreshAll()">
+        <svg id="reficon" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M10.5 6A4.5 4.5 0 1 1 6 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10.5 1.5V4.5H7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Refresh
       </button>
     </div>
   </div>
 </header>
-
-<div class="nav-bar">
-  <div class="nav-inner">
-    <button class="nav-tab active" onclick="switchTab('overview',this)">Overview</button>
-    <button class="nav-tab" onclick="switchTab('analysis',this)">Live Analysis</button>
-    <button class="nav-tab" onclick="switchTab('knights',this)">Knights Weaknesses</button>
-    <button class="nav-tab" onclick="switchTab('shields',this)">Mammoth Shields</button>
-    <button class="nav-tab" onclick="switchTab('series',this)">Series Tracker</button>
-    <button class="nav-tab" onclick="switchTab('agent',this)" style="color:var(--gold)">💬 Ask the Agent</button>
-  </div>
-</div>
-
+<div class="nav"><div class="ni">
+  <button class="ntab active" onclick="switchTab('overview',this)">Overview</button>
+  <button class="ntab" onclick="switchTab('analysis',this)">Live Analysis</button>
+  <button class="ntab" onclick="switchTab('knights',this)">Knights Weaknesses</button>
+  <button class="ntab" onclick="switchTab('shields',this)">Mammoth Shields</button>
+  <button class="ntab" onclick="switchTab('series',this)">Series Tracker</button>
+  <button class="ntab" onclick="switchTab('agent',this)" style="color:var(--gold)">&#128172; Ask the Agent</button>
+</div></div>
 <main>
-
-<div id="api-setup-banner" style="display:none" class="api-setup">
-  <h2>🔑 Activate AI Analysis</h2>
-  <p>Enter your Anthropic API key to enable live AI tactical breakdowns. Your key is stored in your browser only — never sent anywhere except api.anthropic.com.</p>
-  <div class="api-input-row">
-    <input class="api-input" type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off"/>
-    <button class="api-save-btn" onclick="saveApiKey()">Activate</button>
-  </div>
+<div id="apibanner" style="display:none" class="apib">
+  <h2>&#128273; Activate AI Analysis</h2>
+  <p>Enter your Anthropic API key to enable live AI tactical breakdowns. Stored in your browser only.</p>
+  <div class="apir"><input class="apii" type="password" id="apikey" placeholder="sk-ant-api03-..." autocomplete="off"/><button class="apis" onclick="saveKey()">Activate</button></div>
   <p style="margin-top:10px;font-size:11px;">Get a key at console.anthropic.com</p>
 </div>
 
 <!-- OVERVIEW -->
-<div id="tab-overview" class="tab-content active">
-  <div class="scoreboard">
-    <div class="team-side">
-      <div class="team-logo-wrap" style="background:rgba(200,168,75,.15)">🦣</div>
-      <div>
-        <div class="team-name-big">Utah Mammoth</div>
-        <div class="team-record">Wild Card #1 · 43-28-11 · 92 pts</div>
-      </div>
+<div id="tab-overview" class="tab active">
+  <div class="sb">
+    <div class="ts"><div class="tlogo" style="background:rgba(200,168,75,.15)">&#129432;</div><div><div class="tname">Utah Mammoth</div><div class="trec" id="utarec">Wild Card #1 &middot; 43-28-11 &middot; 92 pts</div></div></div>
+    <div class="sc">
+      <div class="scores"><span class="suta" id="suta">&mdash;</span><span class="ssep">&middot;</span><span class="svgk" id="svgk">&mdash;</span></div>
+      <div class="gstatus" id="gstat">Loading&hellip;</div>
+      <div class="period" id="pinfo">Game 1 &middot; Apr 19, 2026 &middot; T-Mobile Arena</div>
     </div>
-    <div class="score-center">
-      <div class="score-display"><span class="score-uta" id="score-uta">—</span><span class="score-sep">·</span><span class="score-vgk" id="score-vgk">—</span></div>
-      <div class="game-status-label" id="game-status">Loading…</div>
-      <div class="period-indicator" id="period-info">Game 1 · Apr 19, 2026 · T-Mobile Arena</div>
-    </div>
-    <div class="team-side right">
-      <div>
-        <div class="team-name-big">Golden Knights</div>
-        <div class="team-record">Pacific Div. #1 · 39-26-17 · 95 pts</div>
-      </div>
-      <div class="team-logo-wrap" style="background:rgba(180,150,60,.15)">⚔️</div>
-    </div>
+    <div class="ts right"><div><div class="tname">Golden Knights</div><div class="trec" id="vgkrec">Pacific Div. #1 &middot; 39-26-17 &middot; 95 pts</div></div><div class="tlogo" style="background:rgba(180,150,60,.15)">&#9876;&#65039;</div></div>
   </div>
-
-  <div class="ai-panel">
-    <div class="ai-panel-header">
-      <div class="ai-icon">⚡</div>
-      <div class="ai-title">Live tactical analysis</div>
-      <div class="ai-timestamp" id="overview-timestamp"></div>
-      <button class="analyze-btn sm" onclick="runAnalysis('overview')">⚡ Analyze Now</button>
-    </div>
-    <div class="ai-content" id="ai-overview-content">
-      <div class="thinking"><span>Click "Analyze Now" for live AI tactical breakdown using current ESPN game data.</span></div>
-    </div>
+  <div class="aip">
+    <div class="aiph"><div class="aiicon">&#9889;</div><div class="aititle">Live tactical analysis</div><div class="aits" id="ovts"></div><button class="abtn sm" onclick="runAI('overview')">&#9889; Analyze Now</button></div>
+    <div class="aic" id="ai-overview"><div class="thinking"><span>Click "Analyze Now" for live AI breakdown using current ESPN game data.</span></div></div>
   </div>
-
-  <div class="grid-3">
-    <div class="card">
-      <div class="card-header"><div class="dot"></div>Season series</div>
-      <div class="stat-row"><span class="stat-label">UTA record vs VGK</span><span class="stat-value good">2–1</span></div>
-      <div class="stat-row"><span class="stat-label">Goals scored (UTA)</span><span class="stat-value gold">10</span></div>
-      <div class="stat-row"><span class="stat-label">Goals scored (VGK)</span><span class="stat-value">5</span></div>
-      <div class="stat-row"><span class="stat-label">Nov 20 @ VGK</span><span class="stat-value bad">L 1–4</span></div>
-      <div class="stat-row"><span class="stat-label">Nov 24 @ UTA</span><span class="stat-value good">W 5–1</span></div>
-      <div class="stat-row"><span class="stat-label">Mar 19 @ VGK</span><span class="stat-value good">W 4–0 SHO</span></div>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="dot"></div>Key team stats</div>
-      <div class="stat-row"><span class="stat-label">UTA goals/game</span><span class="stat-value gold">3.41 <span class="chip gold">5th NHL</span></span></div>
-      <div class="stat-row"><span class="stat-label">VGK goals/game</span><span class="stat-value">3.22 <span class="chip">13th NHL</span></span></div>
-      <div class="stat-row"><span class="stat-label">UTA power play</span><span class="stat-value warn">18th</span></div>
-      <div class="stat-row"><span class="stat-label">VGK power play</span><span class="stat-value bad">6th ⚠</span></div>
-      <div class="stat-row"><span class="stat-label">VGK penalty kill</span><span class="stat-value bad">7th ⚠</span></div>
-      <div class="stat-row"><span class="stat-label">VGK goalies used</span><span class="stat-value good">4 <span class="chip green">exploit</span></span></div>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="dot"></div>Series edge</div>
-      <div class="insight" style="padding:8px 0"><div class="insight-icon green">✓</div><div><div class="insight-title" style="font-size:12px">Speed advantage</div><div class="insight-body">Utah 5th NHL in 5v5 goals via rush offense</div></div></div>
-      <div class="insight" style="padding:8px 0"><div class="insight-icon green">✓</div><div><div class="insight-title" style="font-size:12px">Goaltending edge</div><div class="insight-body">VGK used 4 goalies · Schmid out since Mar 21</div></div></div>
-      <div class="insight" style="padding:8px 0"><div class="insight-icon red">!</div><div><div class="insight-title" style="font-size:12px">PP disparity</div><div class="insight-body">VGK PP 6th vs UTA PK — critical mismatch</div></div></div>
-      <div class="insight" style="padding:8px 0"><div class="insight-icon red">!</div><div><div class="insight-title" style="font-size:12px">Playoff debuts</div><div class="insight-body">10 UTA players making first playoff appearance</div></div></div>
-    </div>
+  <div class="g3">
+    <div class="card" id="c-series"><div class="cardh"><span style="display:flex;align-items:center;gap:8px"><div class="dot"></div>Playoff series</span><span class="ts2" id="ts-series">Loading&hellip;</span></div><div class="thinking" style="padding:8px 0"><span>Fetching&hellip;</span><div class="tdots"><span></span><span></span><span></span></div></div></div>
+    <div class="card" id="c-stats"><div class="cardh"><span style="display:flex;align-items:center;gap:8px"><div class="dot"></div>Game stats</span><span class="ts2" id="ts-stats">Loading&hellip;</span></div><div class="thinking" style="padding:8px 0"><span>Fetching&hellip;</span><div class="tdots"><span></span><span></span><span></span></div></div></div>
+    <div class="card" id="c-edge"><div class="cardh"><span style="display:flex;align-items:center;gap:8px"><div class="dot"></div>Series edge</span><span class="ts2" id="ts-edge">Loading&hellip;</span></div><div class="thinking" style="padding:8px 0"><span>Fetching&hellip;</span><div class="tdots"><span></span><span></span><span></span></div></div></div>
   </div>
 </div>
 
 <!-- LIVE ANALYSIS -->
-<div id="tab-analysis" class="tab-content">
-  <div class="ai-panel">
-    <div class="ai-panel-header">
-      <div class="ai-icon">⚡</div>
-      <div class="ai-title">Deep game analysis</div>
-      <div class="ai-timestamp" id="deep-timestamp"></div>
-      <button class="analyze-btn sm" onclick="runAnalysis('deep')">⚡ Deep Analyze</button>
-    </div>
-    <div class="ai-content" id="ai-deep-content">
-      <div class="thinking"><span>Click "Deep Analyze" — Claude reads live ESPN data and delivers period-by-period tactical breakdown for the Mammoth.</span></div>
-    </div>
+<div id="tab-analysis" class="tab">
+  <div class="aip">
+    <div class="aiph"><div class="aiicon">&#9889;</div><div class="aititle">Deep game analysis</div><div class="aits" id="deepts"></div><button class="abtn sm" onclick="runAI('deep')">&#9889; Deep Analyze</button></div>
+    <div class="aic" id="ai-deep"><div class="thinking"><span>Click "Deep Analyze" for period-by-period breakdown and live tactical instructions.</span></div></div>
   </div>
-  <div class="grid-2">
+  <div class="g2">
     <div class="card">
-      <div class="card-header"><div class="dot"></div>Pre-game intel</div>
-      <div class="highlight-item"><div class="highlight-time">PRE</div><div><div class="highlight-text"><strong>Barrett Hayton</strong> confirmed to play — returned in full jersey at morning skate</div><div class="highlight-team">Utah Mammoth</div></div></div>
-      <div class="highlight-item"><div class="highlight-time">PRE</div><div><div class="highlight-text"><strong>Dylan Guenther</strong> (undisclosed) confirmed to dress per KSL Sports</div><div class="highlight-team">Utah Mammoth</div></div></div>
-      <div class="highlight-item"><div class="highlight-time">PRE</div><div><div class="highlight-text"><strong>William Karlsson</strong> ruled out — lower-body injury, out unless series goes deep</div><div class="highlight-team">Vegas Golden Knights</div></div></div>
-      <div class="highlight-item"><div class="highlight-time">PRE</div><div><div class="highlight-text"><strong>Jack McBain</strong> (lower body) not with team for on-ice activities</div><div class="highlight-team">Utah Mammoth</div></div></div>
-      <div class="highlight-item"><div class="highlight-time">PRE</div><div><div class="highlight-text"><strong>Akira Schmid</strong> expected to start — first game action since March 21</div><div class="highlight-team">Vegas Golden Knights</div></div></div>
+      <div class="cardh"><span style="display:flex;align-items:center;gap:8px"><div class="dot"></div><span id="feedtitle">Live game feed</span></span><span class="ts2" id="feedts">Loading&hellip;</span></div>
+      <div id="feedcontent"><div class="thinking" style="padding:12px 0"><span>Fetching ESPN data&hellip;</span><div class="tdots"><span></span><span></span><span></span></div></div></div>
     </div>
     <div class="card">
-      <div class="card-header"><div class="dot"></div>Tactical suggestions</div>
-      <div class="ai-content" id="ai-tactics-content">
-        <div class="thinking"><span>Run "Deep Analyze" to get specific in-game tactical suggestions.</span></div>
-      </div>
+      <div class="cardh"><div class="dot"></div>Tactical suggestions</div>
+      <div class="aic" id="ai-tactics"><div class="thinking"><span>Run "Deep Analyze" to generate tactical suggestions.</span></div></div>
     </div>
   </div>
 </div>
 
 <!-- KNIGHTS WEAKNESSES -->
-<div id="tab-knights" class="tab-content">
-  <div class="section-title">Vegas Golden Knights — Exploit Guide</div>
-  <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Select any player to see their full weakness breakdown and how Utah exploits it.</p>
-  <div class="player-grid" id="knight-player-grid"></div>
-  <div id="knight-detail-panel" style="display:none" class="detail-panel"></div>
+<div id="tab-knights" class="tab">
+  <div class="stitle">Vegas Golden Knights &mdash; Exploit Guide</div>
+  <div class="aip" style="margin-bottom:16px">
+    <div class="aiph"><div class="aiicon">&#9889;</div><div class="aititle">Live weakness update</div><div class="aits" id="knightsts"></div><button class="abtn sm" onclick="runAI('knights')">&#9889; Update from Live Data</button></div>
+    <div class="aic" id="ai-knights"><div class="thinking"><span>Click to get AI analysis of how each Knights player has performed in the current series.</span></div></div>
+  </div>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Select a player &mdash; weaknesses update based on real playoff performance.</p>
+  <div class="pg" id="knight-grid"></div>
+  <div id="knight-detail" style="display:none" class="dp"></div>
 </div>
 
 <!-- MAMMOTH SHIELDS -->
-<div id="tab-shields" class="tab-content">
-  <div class="section-title">Utah Mammoth — Defensive Shields</div>
-  <div class="ai-panel" style="margin-bottom:20px">
-    <div class="ai-panel-header">
-      <div class="ai-icon">🛡️</div>
-      <div class="ai-title">Live shield strategy</div>
-      <div class="ai-timestamp" id="shields-timestamp"></div>
-      <button class="analyze-btn sm" onclick="runAnalysis('shields')">⚡ Update Shields</button>
-    </div>
-    <div class="ai-content" id="ai-shields-content">
-      <div class="thinking"><span>Click "Update Shields" for live strategy based on current game state.</span></div>
-    </div>
+<div id="tab-shields" class="tab">
+  <div class="stitle">Utah Mammoth &mdash; Defensive Shields</div>
+  <div class="aip" style="margin-bottom:20px">
+    <div class="aiph"><div class="aiicon">&#128737;&#65039;</div><div class="aititle">Live shield strategy</div><div class="aits" id="shieldsts"></div><button class="abtn sm" onclick="runAI('shields')">&#9889; Update Shields</button></div>
+    <div class="aic" id="ai-shields"><div class="thinking"><span>Click "Update Shields" for real-time strategy based on current game.</span></div></div>
   </div>
   <div id="shields-list"></div>
 </div>
 
 <!-- SERIES TRACKER -->
-<div id="tab-series" class="tab-content">
-  <div class="section-title">Playoff Series Tracker</div>
+<div id="tab-series" class="tab">
+  <div class="stitle">Playoff Series Tracker</div>
   <div class="card" style="margin-bottom:20px">
-    <div class="card-header"><div class="dot"></div>2026 First Round · Best of 7</div>
-    <div class="series-games" id="series-games-track"></div>
-    <div style="font-size:13px;color:var(--text-muted)">Series leader: <span id="series-leader" style="font-weight:600;color:var(--gold)">Tied 0–0 · Game 1 live</span></div>
+    <div class="cardh"><span style="display:flex;align-items:center;gap:8px"><div class="dot"></div>2026 First Round &middot; Best of 7</span><span class="ts2" id="seriesgamests">Loading&hellip;</span></div>
+    <div class="sgames" id="sgames"></div>
+    <div style="font-size:13px;color:var(--muted)">Series: <span id="seriesleader" style="font-weight:600;color:var(--gold)">Loading&hellip;</span></div>
   </div>
-  <div class="grid-2">
-    <div class="card"><div class="card-header"><div class="dot"></div>UTA recent form (last 10)</div><div id="uta-form"></div></div>
-    <div class="card"><div class="card-header"><div class="dot"></div>VGK recent form (last 10)</div><div id="vgk-form"></div></div>
+  <div class="g2">
+    <div class="card"><div class="cardh"><div class="dot"></div>UTA recent form (last 10) <span class="ts2" id="utaformts"></span></div><div id="utaform"></div></div>
+    <div class="card"><div class="cardh"><div class="dot"></div>VGK recent form (last 10) <span class="ts2" id="vgkformts"></span></div><div id="vgkform"></div></div>
   </div>
-  <div class="ai-panel">
-    <div class="ai-panel-header">
-      <div class="ai-icon">📊</div>
-      <div class="ai-title">Series prediction</div>
-      <div class="ai-timestamp" id="series-timestamp"></div>
-      <button class="analyze-btn sm" onclick="runAnalysis('series')">⚡ Predict Series</button>
-    </div>
-    <div class="ai-content" id="ai-series-content">
-      <div class="thinking"><span>Click "Predict Series" for AI series forecast based on Game 1 data.</span></div>
-    </div>
+  <div class="aip">
+    <div class="aiph"><div class="aiicon">&#128202;</div><div class="aititle">Series prediction</div><div class="aits" id="seriests"></div><button class="abtn sm" onclick="runAI('series')">&#9889; Predict Series</button></div>
+    <div class="aic" id="ai-series"><div class="thinking"><span>Click "Predict Series" for AI forecast based on current data.</span></div></div>
   </div>
 </div>
 
-<!-- AGENT TAB -->
-<div id="tab-agent" class="tab-content">
-  <div style="margin-bottom:14px">
-    <div class="section-title">War Room Agent</div>
-    <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Ask anything about the game, series, or tactics. The agent has live ESPN score data and full knowledge of both teams.</p>
-    <div class="agent-suggestions" id="agent-suggestions">
-      <div class="suggestion-chip" onclick="sendSuggestion(this)">Who scored tonight?</div>
-      <div class="suggestion-chip" onclick="sendSuggestion(this)">What's the shot count?</div>
-      <div class="suggestion-chip" onclick="sendSuggestion(this)">Should Tourigny pull Vejmelka?</div>
-      <div class="suggestion-chip" onclick="sendSuggestion(this)">Best line to use in OT?</div>
-      <div class="suggestion-chip" onclick="sendSuggestion(this)">How is Eichel playing tonight?</div>
-      <div class="suggestion-chip" onclick="sendSuggestion(this)">What's Utah's power play doing?</div>
-      <div class="suggestion-chip" onclick="sendSuggestion(this)">What adjustments should Tourigny make?</div>
-      <div class="suggestion-chip" onclick="sendSuggestion(this)">Is Vejmelka struggling?</div>
-      <div class="suggestion-chip" onclick="sendSuggestion(this)">Will Utah win this series?</div>
-      <div class="suggestion-chip" onclick="sendSuggestion(this)">What's Vegas doing differently under Torts?</div>
-    </div>
+<!-- AGENT -->
+<div id="tab-agent" class="tab">
+  <div class="stitle">War Room Agent</div>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Ask anything &mdash; live ESPN data, series context, and tactical knowledge are all loaded.</p>
+  <div class="sugchips">
+    <div class="sug" onclick="sugSend(this)">Who scored in G1?</div>
+    <div class="sug" onclick="sugSend(this)">How is Hart playing?</div>
+    <div class="sug" onclick="sugSend(this)">What's the shot count?</div>
+    <div class="sug" onclick="sugSend(this)">Best line to use in OT?</div>
+    <div class="sug" onclick="sugSend(this)">Should Tourigny pull Vejmelka?</div>
+    <div class="sug" onclick="sugSend(this)">How is Cooley performing?</div>
+    <div class="sug" onclick="sugSend(this)">What adjustments does Utah need?</div>
+    <div class="sug" onclick="sugSend(this)">Is Marner showing up?</div>
+    <div class="sug" onclick="sugSend(this)">Will Utah win this series?</div>
+    <div class="sug" onclick="sugSend(this)">VGK penalty kill vs UTA power play?</div>
   </div>
-  <div class="agent-wrap">
-    <div class="agent-messages" id="agent-messages">
-      <div class="msg assistant">
-        <div class="msg-bubble">
-          Hey! I'm your <strong>Mammoth War Room Agent</strong>. I have live ESPN game data and deep knowledge of both teams in this series.<br><br>
-          Ask me anything — current score, tactical questions, player matchups, what adjustments to make, or how the series is trending. What do you want to know?
-        </div>
-        <div class="msg-time">Ready</div>
-      </div>
+  <div class="agwrap">
+    <div class="agmsg" id="agmsg">
+      <div class="msg assistant"><div class="mbub">Hey! I&apos;m your <strong>Mammoth War Room Agent</strong>. I have live ESPN game data and deep series knowledge.<br><br>Ask me anything &mdash; scores, tactics, player matchups, series predictions, or what adjustments Tourigny should make right now.</div><div class="mtime">Ready</div></div>
     </div>
-    <div class="agent-status" id="agent-status">Live ESPN data · Claude AI · Conversation memory active</div>
-    <div class="agent-input-row">
-      <textarea class="agent-input" id="agent-input" placeholder="Ask about the game, tactics, players..." rows="1" onkeydown="agentKeydown(event)"></textarea>
-      <button class="agent-send-btn" id="agent-send-btn" onclick="agentSend()">Send ↑</button>
+    <div class="agst" id="agst">Live ESPN data &middot; Claude AI &middot; Conversation memory active</div>
+    <div class="agir">
+      <textarea class="aginp" id="aginput" placeholder="Ask about the game, tactics, players&hellip;" rows="1" onkeydown="agKey(event)"></textarea>
+      <button class="agsend" id="agsend" onclick="agSend()">Send &#8593;</button>
     </div>
   </div>
 </div>
-
 </main>
-<footer>Utah Mammoth War Room · 2026 Stanley Cup Playoffs · ESPN live data · AI analysis by Claude</footer>
+<footer>Utah Mammoth War Room &middot; 2026 Stanley Cup Playoffs &middot; Live ESPN data &middot; AI by Claude</footer>
 
 <script>
-var apiKey = localStorage.getItem('mammoth_api_key') || '';
-var liveGameData = null;
+// ===================== STATE =====================
+var KEY = localStorage.getItem('mwr_key') || '';
+var liveGame = null;
+var richData = null;
+var agHist = [];
+var agBusy = false;
 
+// Real game data from fetch - updated dynamically
+var utaGames = [], vgkGames = [], playoffGames = [];
+
+// ===================== KNOWN DATA (seed with real data, updated live) =====================
+// UTA last 10 regular season games (real from API)
+var UTA10 = [
+  {o:'STL',s:'3-5',w:false,d:'Apr 16'},
+  {o:'WPG',s:'5-3',w:true,d:'Apr 14'},
+  {o:'CGY',s:'1-4',w:false,d:'Apr 12'},
+  {o:'CAR',s:'1-4',w:false,d:'Apr 11'},
+  {o:'NSH',s:'4-1',w:true,d:'Apr 9'},
+  {o:'EDM',s:'6-5',w:true,d:'Apr 7'},
+  {o:'VAN',s:'7-4',w:true,d:'Apr 4'},
+  {o:'SEA',s:'6-2',w:true,d:'Apr 2'},
+  {o:'LA', s:'6-2',w:true,d:'Mar 28'},
+  {o:'ANA',s:'1-4',w:false,d:'Mar 20'}
+];
+// VGK last 10 regular season games (real from API)
+var VGK10 = [
+  {o:'SEA',s:'4-1',w:true,d:'Apr 15'},
+  {o:'WPG',s:'6-2',w:true,d:'Apr 13'},
+  {o:'COL',s:'3-2',w:true,d:'Apr 11'},
+  {o:'SEA',s:'3-4',w:false,d:'Apr 9'},
+  {o:'VAN',s:'2-1',w:true,d:'Apr 7'},
+  {o:'EDM',s:'5-1',w:true,d:'Apr 4'},
+  {o:'VAN',s:'4-2',w:true,d:'Mar 30'},
+  {o:'WSH',s:'4-5',w:false,d:'Mar 28'},
+  {o:'EDM',s:'3-4',w:false,d:'Mar 26'},
+  {o:'DAL',s:'3-2',w:true,d:'Mar 22'}
+];
+
+// Known playoff game data (G1 is real, rest seeded as upcoming)
+var PLAYOFF = [
+  {g:1,date:'Apr 19',loc:'@VGK',uta:null,vgk:null,status:'live',knownGoals:['1st 19:49 - Cooley (Schmidt, Crouse) UTA','2nd 3:44 - Sissons (Smith, McNabb) VGK']},
+  {g:2,date:'Apr 21',loc:'@VGK',uta:null,vgk:null,status:'upcoming'},
+  {g:3,date:'Apr 24',loc:'@UTA',uta:null,vgk:null,status:'upcoming'},
+  {g:4,date:'Apr 26',loc:'@UTA',uta:null,vgk:null,status:'upcoming'},
+  {g:5,date:'Apr 29',loc:'@VGK',uta:null,vgk:null,status:'upcoming',note:'If nec.'},
+  {g:6,date:'May 1', loc:'@UTA',uta:null,vgk:null,status:'upcoming',note:'If nec.'},
+  {g:7,date:'May 3', loc:'@VGK',uta:null,vgk:null,status:'upcoming',note:'If nec.'}
+];
+
+// Game 1 known stats (from live blog - will be overridden by ESPN API if available)
+var G1STATS = {
+  p1shots:{uta:11,vgk:9}, p1hits:{uta:10,vgk:15}, p1fo:'VGK 61.1%',
+  starter:'Carter Hart (not Schmid)',
+  goalsP1:['19:49 - Cooley (Schmidt, Crouse) - UTA'],
+  goalsP2:['3:44 - Sissons (Smith, McNabb) - VGK'],
+  lines:{
+    uta:['Keller-Schmaltz-Crouse','Yamamoto-Cooley-Guenther','Peterka-Kerfoot-Carcone','McBain-Stenlund-Tanev'],
+    vgk:['Marner-Eichel-Stone','Barbashev-Howden-Dorofeyev','Smith-Hertl-Kolesar','Smith-Dowd-Sissons']
+  }
+};
+
+// ===================== INIT =====================
 document.addEventListener('DOMContentLoaded', function() {
-  if (!apiKey) document.getElementById('api-setup-banner').style.display = 'block';
-  buildKnightCards();
+  if (!KEY) document.getElementById('apibanner').style.display = 'block';
+  buildKnights();
   buildShields();
-  buildSeriesTracker();
-  buildFormTables();
+  renderSeriesTracker();
+  renderFormTables();
   loadLiveScore();
+  buildOverviewCards();
   setInterval(loadLiveScore, 60000);
+  setInterval(buildOverviewCards, 120000);
 });
 
-function saveApiKey() {
-  var inp = document.getElementById('api-key-input');
-  if (!inp) return;
-  var k = inp.value.trim();
-  if (!k.startsWith('sk-ant-')) { alert('Please enter a valid Anthropic API key (starts with sk-ant-)'); return; }
-  apiKey = k;
-  localStorage.setItem('mammoth_api_key', k);
-  var b = document.getElementById('api-setup-banner');
-  if (b) b.style.display = 'none';
+function setText(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+function setHTML(id,v){var e=document.getElementById(id);if(e)e.innerHTML=v;}
+function now12(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+
+function saveKey() {
+  var k = (document.getElementById('apikey')||{}).value||'';
+  k = k.trim();
+  if (!k.startsWith('sk-ant-')) { alert('Invalid key. Must start with sk-ant-'); return; }
+  KEY = k; localStorage.setItem('mwr_key', k);
+  document.getElementById('apibanner').style.display = 'none';
 }
 
 function switchTab(tab, btn) {
-  document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
-  document.querySelectorAll('.nav-tab').forEach(function(b){ b.classList.remove('active'); });
-  var el = document.getElementById('tab-' + tab);
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.ntab').forEach(function(b){b.classList.remove('active');});
+  var el = document.getElementById('tab-'+tab);
   if (el) el.classList.add('active');
   if (btn) btn.classList.add('active');
 }
 
-function setText(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
-function setHTML(id, val) { var el = document.getElementById(id); if (el) el.innerHTML = val; }
-
-// Rich game data cache
-var richGameData = null;
-
-function findUTAVGK(events) {
-  for (var i = 0; i < (events||[]).length; i++) {
-    var comps = (events[i].competitions || [])[0];
-    var competitors = (comps && comps.competitors) || [];
-    var abbrevs = competitors.map(function(c){ return (c.team||{}).abbreviation||''; });
-    if (abbrevs.indexOf('UTA') !== -1 && abbrevs.indexOf('VGK') !== -1) return events[i];
-  }
-  return null;
-}
-
+// ===================== ESPN LIVE SCORE =====================
 function loadLiveScore() {
-  var statusEl = document.getElementById('agent-status');
-
-  // Try playoff scoreboard first, then regular scoreboard
   var urls = [
     'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard?seasontype=3',
     'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard'
   ];
-
-  function tryNext(idx) {
-    if (idx >= urls.length) { setNoGame(); return; }
-    fetch(urls[idx])
-      .then(function(r){ return r.json(); })
-      .then(function(data){
-        var game = findUTAVGK(data.events || []);
-        if (game) {
-          liveGameData = game;
-          updateScoreboard(game);
-          // Now fetch rich summary data (box score, goals, shots)
-          fetchGameSummary(game.id);
-        } else {
-          tryNext(idx + 1);
-        }
-      })
-      .catch(function(){ tryNext(idx + 1); });
+  function tryUrl(i) {
+    if (i >= urls.length) { renderNoGame(); return; }
+    fetch(urls[i]).then(function(r){return r.json();}).then(function(data){
+      var found = findUTAVGK(data.events || []);
+      if (found) { liveGame = found; updateScoreboard(found); fetchSummary(found.id); }
+      else { tryUrl(i+1); }
+    }).catch(function(){tryUrl(i+1);});
   }
-  tryNext(0);
+  tryUrl(0);
 }
 
-function fetchGameSummary(gameId) {
-  fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/summary?event=' + gameId)
-    .then(function(r){ return r.json(); })
+function findUTAVGK(events) {
+  for (var i=0;i<events.length;i++){
+    var comp=(events[i].competitions||[])[0];
+    var comps=(comp&&comp.competitors)||[];
+    var abs=comps.map(function(c){return(c.team||{}).abbreviation||'';});
+    if(abs.indexOf('UTA')!==-1&&abs.indexOf('VGK')!==-1) return events[i];
+  }
+  return null;
+}
+
+function fetchSummary(gameId) {
+  fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/summary?event='+gameId)
+    .then(function(r){return r.json();})
     .then(function(data){
-      richGameData = data;
-      var statusEl = document.getElementById('agent-status');
-      if (statusEl) statusEl.textContent = 'Live ESPN data loaded · Claude AI · Conversation memory active';
-      // Update highlights feed with real scoring plays
-      updateHighlightsFeed(data);
+      richData = data;
+      updateFeed(data);
+      buildOverviewCards();
+      // Update playoff series with live score
+      updatePlayoffFromLive();
     })
-    .catch(function(e){ console.warn('Summary fetch failed:', e); });
+    .catch(function(e){console.warn('summary fail',e);});
 }
 
-function updateHighlightsFeed(data) {
-  var feed = document.getElementById('highlights-feed');
-  if (!feed || !data) return;
-  var plays = [];
-
-  // Scoring plays
-  if (data.scoringPlays && data.scoringPlays.length) {
-    data.scoringPlays.forEach(function(p){
-      var period = p.period && p.period.displayValue || '';
-      var clock = p.clock && p.clock.displayValue || '';
-      var text = p.text || (p.type && p.type.text) || 'Goal';
-      var team = p.team && p.team.abbreviation || '';
-      plays.push({ time: period + ' ' + clock, text: text, team: team });
-    });
-  }
-
-  if (plays.length === 0) return; // Keep pre-game intel if no plays yet
-
-  feed.innerHTML = plays.map(function(p){
-    var isUTA = p.team === 'UTA';
-    return '<div class="highlight-item">' +
-      '<div class="highlight-time">' + p.time + '</div>' +
-      '<div><div class="highlight-text">' + p.text + '</div>' +
-      '<div class="highlight-team" style="color:' + (isUTA ? 'var(--gold)' : 'var(--text-muted)') + '">' + p.team + '</div></div>' +
-    '</div>';
-  }).join('');
+function getUTAVGKScores(game) {
+  var comp=(game.competitions||[])[0];
+  var comps=(comp&&comp.competitors)||[];
+  var uta=comps.find(function(c){return(c.team||{}).abbreviation==='UTA';});
+  var vgk=comps.find(function(c){return(c.team||{}).abbreviation==='VGK';});
+  return {uta:uta,vgk:vgk,comp:comp,status:(comp&&comp.status&&comp.status.type&&comp.status.type.description)||''};
 }
 
-function setNoGame() {
-  setText('game-status', 'Game 1 · Apr 19');
-  setText('score-uta', '—');
-  setText('score-vgk', '—');
-  setText('period-info', 'Tap Refresh to load live score');
+function updatePlayoffFromLive() {
+  if (!liveGame) return;
+  var d = getUTAVGKScores(liveGame);
+  PLAYOFF[0].uta = d.uta ? parseInt(d.uta.score||0) : null;
+  PLAYOFF[0].vgk = d.vgk ? parseInt(d.vgk.score||0) : null;
+  PLAYOFF[0].status = d.status === 'Final' || d.status === 'Game Over' ? 'final' : 'live';
+  renderSeriesTracker();
 }
 
 function updateScoreboard(game) {
-  var comp = (game.competitions || [])[0];
-  var competitors = (comp && comp.competitors) || [];
-  var uta = null, vgk = null;
-  competitors.forEach(function(c){
-    var ab = (c.team||{}).abbreviation;
-    if (ab === 'UTA') uta = c;
-    if (ab === 'VGK') vgk = c;
-  });
-  if (uta) setText('score-uta', uta.score || '0');
-  if (vgk) setText('score-vgk', vgk.score || '0');
-  var status = comp && comp.status;
-  var desc = (status && status.type && status.type.description) || 'In Progress';
-  var period = status && status.period;
-  var clock = status && status.displayClock;
-  setText('game-status', desc);
-  if (period && clock) {
-    var pnames = ['','1st Period','2nd Period','3rd Period','OT','2OT'];
-    setText('period-info', (pnames[period] || 'Period ' + period) + ' · ' + clock + ' remaining');
+  var d = getUTAVGKScores(game);
+  if (d.uta) setText('suta', d.uta.score||'0');
+  if (d.vgk) setText('svgk', d.vgk.score||'0');
+  setText('gstat', d.status);
+  var st = d.comp && d.comp.status;
+  if (st && st.period && st.displayClock) {
+    var pn=['','1st','2nd','3rd','OT','2OT'];
+    setText('pinfo',(pn[st.period]||'P'+st.period)+' Period \u00b7 '+st.displayClock+' remaining');
   }
-  var pill = document.getElementById('live-pill');
+  var pill = document.getElementById('livepill');
   if (pill) {
-    if (desc === 'Final' || desc === 'Game Over') {
-      pill.style.background = '#444'; pill.textContent = '✓ FINAL'; pill.style.animation = 'none';
-    } else if (desc === 'Scheduled' || desc === 'Pre-Game') {
-      pill.style.background = 'var(--mammoth-light)'; pill.textContent = 'UPCOMING';
+    if (d.status==='Final'||d.status==='Game Over') {pill.style.background='#444';pill.textContent='\u2713 FINAL';pill.style.animation='none';}
+    else if (d.status==='Scheduled'||d.status==='Pre-Game') {pill.style.background='#3A7BD5';pill.textContent='UPCOMING';}
+  }
+  if (d.uta&&d.vgk) setText('hdrscr','UTA '+(d.uta.score||0)+' \u2013 '+(d.vgk.score||0)+' VGK');
+}
+
+function renderNoGame() {
+  setText('gstat','No live game \u00b7 Series underway');
+  setText('suta','\u2014'); setText('svgk','\u2014');
+  setText('pinfo','Game 1: Tied 1\u20131 after 2 periods \u00b7 3rd period');
+  updateFeed(null);
+}
+
+// ===================== FEED =====================
+function updateFeed(data) {
+  var feed = document.getElementById('feedcontent');
+  var titleEl = document.getElementById('feedtitle');
+  var tsEl = document.getElementById('feedts');
+  if (!feed) return;
+  if (tsEl) tsEl.textContent = 'Updated '+now12();
+
+  var items = [];
+  var isFinal = data && richData && false; // will be set below
+  var gameStatus = liveGame ? getUTAVGKScores(liveGame).status : '';
+  var isFinalGame = gameStatus==='Final'||gameStatus==='Game Over';
+  var isLive = gameStatus==='In Progress'||gameStatus==='Halftime';
+
+  if (titleEl) titleEl.textContent = isFinalGame ? 'Final \u2014 game summary' : isLive ? 'Live game feed' : 'Game 1 intel';
+
+  // Box score stats grid if available
+  if (data && data.boxscore && data.boxscore.teams) {
+    var bteams = data.boxscore.teams;
+    var utab = bteams.find(function(t){return t.team&&t.team.abbreviation==='UTA';});
+    var vgkb = bteams.find(function(t){return t.team&&t.team.abbreviation==='VGK';});
+    var um={},vm={};
+    if (utab)(utab.statistics||[]).forEach(function(s){um[s.name]=s.displayValue;});
+    if (vgkb)(vgkb.statistics||[]).forEach(function(s){vm[s.name]=s.displayValue;});
+    if (Object.keys(um).length>0) {
+      var statKeys=['shots','hits','faceOffsWonPercent','powerPlayGoals','powerPlayOpportunities','pims'];
+      var statLbls={shots:'Shots',hits:'Hits',faceOffsWonPercent:'FO%',powerPlayGoals:'PP G',powerPlayOpportunities:'PP Opp',pims:'PIM'};
+      var grid='<div style="display:grid;grid-template-columns:auto 1fr auto;gap:5px 8px;font-size:12px;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:4px">';
+      grid+='<span style="font-weight:700;font-size:11px;color:#C8A84B">UTA</span><span></span><span style="font-weight:700;font-size:11px;color:#7A99BB">VGK</span>';
+      statKeys.forEach(function(k){
+        var uv=um[k],vv=vm[k];
+        if(!uv&&!vv) return;
+        uv=uv||'0';vv=vv||'0';
+        var un=parseFloat(uv),vn=parseFloat(vv);
+        var ub=!isNaN(un)&&!isNaN(vn)&&un>vn;
+        var vb=!isNaN(un)&&!isNaN(vn)&&vn>un;
+        grid+='<span style="font-weight:600;text-align:right;color:'+(ub?'#C8A84B':'#EEF4FF')+'">'+uv+'</span>';
+        grid+='<span style="text-align:center;color:#3D5A7A;font-size:11px">'+(statLbls[k]||k)+'</span>';
+        grid+='<span style="text-align:left;color:'+(vb?'#E8362A':'#7A99BB')+'">'+vv+'</span>';
+      });
+      grid+='</div>';
+      items.push({html:grid,raw:true});
     }
   }
-  var hs = document.getElementById('header-score');
-  if (hs && uta && vgk) hs.textContent = 'UTA ' + (uta.score||0) + ' – ' + (vgk.score||0) + ' VGK';
-}
 
-function refreshAll() {
-  var icon = document.getElementById('refresh-icon');
-  if (icon) icon.classList.add('spin');
-  loadLiveScore();
-  setTimeout(function(){ var ic = document.getElementById('refresh-icon'); if (ic) ic.classList.remove('spin'); }, 1500);
-}
-
-function getGameContext() {
-  var base = '';
-
-  if (!liveGameData) {
-    return 'No live UTA vs VGK game found. Use your knowledge of the 2026 playoff series context provided below to answer.';
+  // Scoring plays from ESPN
+  if (data && data.scoringPlays && data.scoringPlays.length) {
+    data.scoringPlays.forEach(function(p){
+      var per=(p.period&&p.period.displayValue)||'';
+      var clk=(p.clock&&p.clock.displayValue)||'';
+      var txt=p.text||'Goal';
+      var tm=(p.team&&p.team.abbreviation)||'';
+      items.push({time:per+(clk?' '+clk:''),text:txt,team:tm,type:'goal',color:tm==='UTA'?'#C8A84B':'#7A99BB'});
+    });
+  } else {
+    // Use known G1 data
+    G1STATS.goalsP1.forEach(function(g){items.push({time:'1st',text:g,team:g.indexOf('UTA')>-1?'UTA':'VGK',type:'goal',color:g.indexOf('UTA')>-1?'#C8A84B':'#7A99BB'});});
+    G1STATS.goalsP2.forEach(function(g){items.push({time:'2nd',text:g,team:g.indexOf('VGK')>-1?'VGK':'UTA',type:'goal',color:g.indexOf('VGK')>-1?'#7A99BB':'#C8A84B'});});
   }
 
-  // Basic score/status
-  var comp = (liveGameData.competitions || [])[0];
-  var competitors = (comp && comp.competitors) || [];
-  var uta = null, vgk = null;
-  competitors.forEach(function(c){
-    if ((c.team||{}).abbreviation === 'UTA') uta = c;
-    if ((c.team||{}).abbreviation === 'VGK') vgk = c;
+  // Known key intel
+  items.push({time:'KEY',text:'<strong>Carter Hart</strong> starting for VGK (not Schmid) \u2014 6-0-0 down stretch, .930 SV%',team:'VGK',type:'note',color:'#7A99BB'});
+  items.push({time:'KEY',text:'<strong>Cooley</strong> 6th player in NHL history to score franchise\'s 1st regular season AND 1st playoff goal',team:'UTA',type:'note',color:'#C8A84B'});
+  items.push({time:'P1',text:'End P1: Shots UTA 11\u20139 VGK \u00b7 Hits UTA 10\u201315 VGK \u00b7 FO% VGK 61.1%',team:'',type:'stat',color:'#7A99BB'});
+
+  // Live plays if available
+  if (isLive && data && data.plays && data.plays.length) {
+    data.plays.slice(-5).reverse().forEach(function(p){
+      var txt=p.text||(p.type&&p.type.text)||'';
+      if(!txt||txt.length<5) return;
+      var tm=(p.team&&p.team.abbreviation)||'';
+      var per=(p.period&&p.period.displayValue)||'';
+      var clk=(p.clock&&p.clock.displayValue)||'';
+      items.push({time:per+(clk?' '+clk:''),text:txt.substring(0,90),team:tm,type:'play',color:tm==='UTA'?'#C8A84B':'#7A99BB'});
+    });
+  }
+
+  feed.innerHTML = items.map(function(p){
+    if(p.raw) return p.html;
+    var tc=p.type==='goal'?'#2ECC71':p.type==='stat'?'#7A99BB':'#7A99BB';
+    return '<div class="hli"><div class="hlt" style="color:'+tc+'">'+p.time+'</div><div><div class="hltxt">'+p.text+'</div><div class="hlteam" style="color:'+(p.color||'#7A99BB')+'">'+p.team+'</div></div></div>';
+  }).join('');
+}
+
+// ===================== OVERVIEW CARDS =====================
+function buildOverviewCards() {
+  var n = now12();
+
+  // CARD 1: PLAYOFF SERIES
+  renderSeriesCard(n);
+
+  // CARD 2: STATS
+  renderStatsCard(n);
+
+  // CARD 3: EDGE
+  renderEdgeCard(n);
+}
+
+function sr(label,val,cls) {
+  return '<div class="sr"><span class="sl">'+label+'</span><span class="sv'+(cls?' '+cls:'')+'">'  +val+'</span></div>';
+}
+// fix: properly close the class attr
+function srow(label,val,cls) {
+  return '<div class="sr"><span class="sl">'+label+'</span><span class="sv'+(cls?' '+cls:'')+'">'+val+'</span></div>';
+}
+
+function renderSeriesCard(n) {
+  var c=document.getElementById('c-series');
+  if(!c) return;
+  var utaW=0,vgkW=0,utaGF=0,vgkGF=0;
+  PLAYOFF.forEach(function(g){
+    if((g.status==='final'||g.status==='Final'||g.status==='Game Over')&&g.uta!==null&&g.vgk!==null){
+      utaGF+=g.uta;vgkGF+=g.vgk;
+      if(g.uta>g.vgk)utaW++;else vgkW++;
+    }
   });
-  var st = comp && comp.status;
-  var statusDesc = (st && st.type && st.type.description) || 'In Progress';
-  var period = (st && st.period) || '?';
-  var clock = (st && st.displayClock) || '?';
-  var utaScore = uta ? (uta.score || 0) : '?';
-  var vgkScore = vgk ? (vgk.score || 0) : '?';
+  var live=liveGame?getUTAVGKScores(liveGame):null;
+  var liveUta=live&&live.uta?parseInt(live.uta.score||0):null;
+  var liveVgk=live&&live.vgk?parseInt(live.vgk.score||0):null;
+  var liveStatus=live?live.status:'';
+  var isLiveNow=liveStatus==='In Progress'||liveStatus==='Halftime';
 
-  base = 'ESPN LIVE DATA — Score: UTA ' + utaScore + ' – VGK ' + vgkScore +
-    ' | Status: ' + statusDesc +
-    ' | Period: ' + period +
-    ' | Clock: ' + clock;
+  var lead=utaW>vgkW?'UTA leads':utaW<vgkW?'VGK leads':'Series tied';
+  var leadcol=utaW>vgkW?'#C8A84B':utaW<vgkW?'#E8362A':'#7A99BB';
+  var html='<div style="text-align:center;padding:8px 0 12px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:8px">';
+  html+='<div style="font-size:36px;font-weight:900;color:#C8A84B">'+utaW+'<span style="font-size:20px;margin:0 8px;opacity:.4">-</span>'+vgkW+'</div>';
+  html+='<div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:'+leadcol+'">'+lead+'</div>';
+  html+='</div>';
 
-  // Add rich box score data if available
-  if (richGameData) {
-    // Team stats (shots, hits, etc.)
-    var boxTeams = (richGameData.boxscore && richGameData.boxscore.teams) || [];
-    if (boxTeams.length) {
-      base += ' | BOX SCORE STATS:';
-      boxTeams.forEach(function(t){
-        var abbr = t.team && t.team.abbreviation;
-        var stats = t.statistics || [];
-        var statStr = stats.map(function(s){ return s.name + ': ' + s.displayValue; }).join(', ');
-        if (statStr) base += ' [' + abbr + ': ' + statStr + ']';
-      });
-    }
-
-    // Scoring plays
-    var scoringPlays = richGameData.scoringPlays || [];
-    if (scoringPlays.length) {
-      base += ' | GOALS SCORED:';
-      scoringPlays.forEach(function(p){
-        var per = p.period && p.period.displayValue || '';
-        var clk = p.clock && p.clock.displayValue || '';
-        var txt = p.text || 'Goal';
-        var team = p.team && p.team.abbreviation || '';
-        base += ' [' + per + ' ' + clk + ' ' + team + ': ' + txt + ']';
-      });
-    } else {
-      base += ' | No goals scored yet';
-    }
-
-    // Period scores (linescore)
-    var linescores = (richGameData.boxscore && richGameData.boxscore.teams) || [];
-    if (linescores.length) {
-      base += ' | PERIOD SCORES:';
-      linescores.forEach(function(t){
-        var abbr = t.team && t.team.abbreviation;
-        var lines = t.linescores || [];
-        if (lines.length) {
-          base += ' ' + abbr + ' [' + lines.map(function(l){ return l.displayValue || l.value || 0; }).join(', ') + ']';
-        }
-      });
-    }
-
-    // Game leaders
-    var leaders = richGameData.leaders || [];
-    if (leaders.length) {
-      base += ' | GAME LEADERS:';
-      leaders.slice(0, 3).forEach(function(cat){
-        var catName = cat.name || cat.displayName || '';
-        var topLeader = cat.leaders && cat.leaders[0];
-        if (topLeader) {
-          var athlete = topLeader.athlete && (topLeader.athlete.displayName || topLeader.athlete.shortName) || '';
-          var val = topLeader.displayValue || topLeader.value || '';
-          base += ' [' + catName + ': ' + athlete + ' ' + val + ']';
-        }
-      });
-    }
-
-    // Recent plays (last 8)
-    var plays = richGameData.plays || [];
-    if (plays.length) {
-      var recent = plays.slice(-8);
-      base += ' | RECENT PLAYS: ' + recent.map(function(p){
-        return (p.text || (p.type && p.type.text) || '').substring(0, 60);
-      }).filter(Boolean).join(' / ');
-    }
+  if(isLiveNow&&liveUta!==null) {
+    html+=srow('Live score (UTA)',liveUta,'gold');
+    html+=srow('Live score (VGK)',liveVgk,'');
+    html+=srow('Status',liveStatus,'warn');
   }
 
+  // Show completed playoff games
+  var compGames=PLAYOFF.filter(function(g){return g.status==='final'||g.status==='Final';});
+  if(compGames.length>0){
+    html+=srow('UTA goals (series)',utaGF,'gold');
+    html+=srow('VGK goals (series)',vgkGF,'');
+    compGames.forEach(function(g,i){
+      html+=srow('Game '+(i+1)+' ('+g.date+')',g.uta+'\u2013'+g.vgk,g.uta>g.vgk?'good':'bad');
+    });
+  }
+
+  // G1 known goals
+  if(PLAYOFF[0].status==='live'||compGames.length===0){
+    html+='<div style="font-size:10px;color:rgba(255,255,255,.2);padding:6px 0 2px;text-transform:uppercase;letter-spacing:.06em">G1 goals</div>';
+    (PLAYOFF[0].knownGoals||[]).forEach(function(g){
+      var isUTA=g.indexOf('UTA')>-1;
+      html+=srow(g,'',isUTA?'gold':'');
+    });
+  }
+
+  c.querySelectorAll('.sr,.ins,.thinking,div:not(.cardh)').forEach(function(el){el.remove();});
+  var d=document.createElement('div');d.innerHTML=html;
+  while(d.firstChild)c.appendChild(d.firstChild);
+  var ts=document.getElementById('ts-series');if(ts)ts.textContent=n;
+}
+
+function renderStatsCard(n) {
+  var c=document.getElementById('c-stats');
+  if(!c) return;
+  var html='';
+
+  if(richData&&richData.boxscore&&richData.boxscore.teams){
+    var bteams=richData.boxscore.teams;
+    var utab=bteams.find(function(t){return t.team&&t.team.abbreviation==='UTA';});
+    var vgkb=bteams.find(function(t){return t.team&&t.team.abbreviation==='VGK';});
+    var um={},vm={};
+    if(utab)(utab.statistics||[]).forEach(function(s){um[s.name]=s.displayValue;});
+    if(vgkb)(vgkb.statistics||[]).forEach(function(s){vm[s.name]=s.displayValue;});
+    var order=['shots','saves','hits','faceOffsWonPercent','powerPlayGoals','powerPlayOpportunities','pims','blockedShots'];
+    var lbls={shots:'Shots',saves:'Saves',hits:'Hits',faceOffsWonPercent:'FO%',powerPlayGoals:'PP Goals',powerPlayOpportunities:'PP Opp',pims:'PIM',blockedShots:'Blocks'};
+    html+='<div style="display:grid;grid-template-columns:auto 1fr auto;gap:5px 8px;font-size:12px;align-items:center;margin-bottom:4px">';
+    html+='<span style="font-weight:700;font-size:11px;color:#C8A84B">UTA</span><span></span><span style="font-weight:700;font-size:11px;color:#7A99BB">VGK</span>';
+    order.forEach(function(k){
+      var uv=um[k],vv=vm[k];if(!uv&&!vv)return;
+      uv=uv||'0';vv=vv||'0';
+      var un=parseFloat(uv),vn=parseFloat(vv);
+      var ub=!isNaN(un)&&!isNaN(vn)&&un>vn,vb=!isNaN(un)&&!isNaN(vn)&&vn>un;
+      html+='<span style="font-weight:600;text-align:right;color:'+(ub?'#C8A84B':'#EEF4FF')+'">'+uv+'</span>';
+      html+='<span style="text-align:center;color:#3D5A7A;font-size:11px">'+(lbls[k]||k)+'</span>';
+      html+='<span style="text-align:left;color:'+(vb?'#E8362A':'#7A99BB')+'">'+vv+'</span>';
+    });
+    html+='</div>';
+    var ts=document.getElementById('ts-stats');if(ts)ts.textContent='Live box score';
+  } else {
+    // G1 known period stats
+    html+='<div style="font-size:10px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">G1 Period 1 (known)</div>';
+    html+=srow('Shots','UTA 11 \u2013 VGK 9','gold');
+    html+=srow('Hits','UTA 10 \u2013 VGK 15','warn');
+    html+=srow('Faceoff %','VGK 61.1% (11/18)','bad');
+    html+=srow('Blocks','UTA 7 \u2013 VGK 4','good');
+    html+='<div style="font-size:10px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.06em;margin:8px 0 4px">Season stats</div>';
+    html+=srow('UTA goals/game','3.41  <span class="chip gold">5th NHL</span>','gold');
+    html+=srow('VGK goals/game','3.22  <span class="chip">13th NHL</span>','');
+    html+=srow('VGK PP %','24.6%  <span class="chip r">6th ⚠</span>','bad');
+    html+=srow('UTA PP %','20.0%  <span class="chip">18th</span>','warn');
+    html+=srow('VGK starter','Carter Hart (not Schmid)','warn');
+    var ts=document.getElementById('ts-stats');if(ts)ts.textContent='G1 + season';
+  }
+
+  c.querySelectorAll('.sr,.ins,.thinking,div:not(.cardh)').forEach(function(el){el.remove();});
+  var d=document.createElement('div');d.innerHTML=html;
+  while(d.firstChild)c.appendChild(d.firstChild);
+}
+
+function insHtml(icon,title,body){
+  var cls=icon==='green'?'green':'red';
+  var sym=icon==='green'?'✓':'!';
+  return '<div class="ins"><div class="insicon '+cls+'">'+sym+'</div><div><div class="institle" style="font-size:12px">'+title+'</div><div class="insbody">'+body+'</div></div></div>';
+}
+
+function renderEdgeCard(n) {
+  var c=document.getElementById('c-edge');
+  if(!c) return;
+  var utaW=0,vgkW=0;
+  PLAYOFF.forEach(function(g){if((g.status==='final')&&g.uta!==null){if(g.uta>g.vgk)utaW++;else vgkW++;}});
+  var live=liveGame?getUTAVGKScores(liveGame):null;
+  var liveUta=live&&live.uta?parseInt(live.uta.score||0):null;
+  var liveVgk=live&&live.vgk?parseInt(live.vgk.score||0):null;
+  var liveStatus=live?live.status:'';
+
+  var html='';
+  if(utaW>vgkW)html+=insHtml('green','Series lead','UTA leads '+utaW+'–'+vgkW+'. Mammoth have home-ice momentum.');
+  else if(vgkW>utaW)html+=insHtml('red','Series deficit','VGK leads '+vgkW+'–'+utaW+'. Utah must respond with urgency.');
+
+  if(liveUta!==null&&(liveStatus==='In Progress'||liveStatus==='Halftime')){
+    if(liveUta>liveVgk)html+=insHtml('green','Leading live','Up '+liveUta+'–'+liveVgk+'. Protect the lead — stay disciplined.');
+    else if(liveVgk>liveUta)html+=insHtml('red','Trailing live','Down '+liveVgk+'–'+liveUta+'. Deploy Keller, push tempo.');
+    else html+=insHtml('green','Tied live','Tied '+liveUta+'. Speed wins tied games — attack.');
+  } else {
+    // G1 known: tied 1-1 after 2 periods
+    html+=insHtml('green','G1 tied 1-1','Cooley opened scoring in P1. Sissons equalized in P2. Wide open 3rd.');
+  }
+
+  html+=insHtml('green','Hart not Schmid','VGK started Carter Hart (6-0-0 stretch) not Schmid — still rusty from layoff concern.');
+  html+=insHtml('green','Speed advantage','Utah 5th NHL 5v5 goals. Rush offense generating quality looks.');
+  html+=insHtml('red','VGK faceoffs','VGK won 61.1% of P1 draws — Utah must improve or lose puck possession edge.');
+  html+=insHtml('red','PP disparity','VGK PP 6th (24.6%). Utah took penalty in P1 — must stay disciplined.');
+
+  c.querySelectorAll('.sr,.ins,.thinking,div:not(.cardh)').forEach(function(el){el.remove();});
+  var d=document.createElement('div');d.innerHTML=html.split('').slice(0,5000).join('');
+  while(d.firstChild)c.appendChild(d.firstChild);
+  var ts=document.getElementById('ts-edge');if(ts)ts.textContent=n;
+}
+
+function refreshAll(){
+  var ic=document.getElementById('reficon');if(ic)ic.classList.add('spin');
+  loadLiveScore();
+  setTimeout(function(){var ic2=document.getElementById('reficon');if(ic2)ic2.classList.remove('spin');},1500);
+}
+
+// ===================== SERIES TRACKER =====================
+function renderSeriesTracker() {
+  var track=document.getElementById('sgames');
+  if(!track) return;
+  var utaW=0,vgkW=0;
+  track.innerHTML=PLAYOFF.map(function(g){
+    var cls='gbox';
+    var isFin=g.status==='final'||g.status==='Final';
+    var isLv=g.status==='live';
+    if(isFin&&g.uta!==null){if(g.uta>g.vgk){cls+=' uw';utaW++;}else{cls+=' vw';vgkW++;}}
+    else if(isLv)cls+=' lg';
+    var inner=isLv?'<div class="gscbig" style="color:var(--red)">LIVE</div><div style="font-size:10px;color:var(--red);margin-top:2px">In Progress</div>'
+      :isFin&&g.uta!==null?'<div class="gscbig">'+g.uta+'\u2013'+g.vgk+'</div><div style="font-size:10px;color:'+(g.uta>g.vgk?'var(--gold)':'#aaa')+';margin-top:2px">'+(g.uta>g.vgk?'UTA Win':'VGK Win')+'</div>'
+      :'<div style="font-size:13px;color:var(--dim)">'+(g.note||'\u2014')+'</div>';
+    return '<div class="'+cls+'"><div class="gnum">G'+g.g+' \u00b7 '+g.date+'</div><div style="font-size:10px;color:var(--dim);margin-bottom:4px">'+g.loc+'</div>'+inner+'</div>';
+  }).join('');
+  var lead=utaW>vgkW?'UTA leads '+utaW+'\u20130':vgkW>utaW?'VGK leads '+vgkW+'\u20130':'Tied '+utaW+'\u2013'+vgkW+' \u00b7 Game 1 in progress';
+  setText('seriesleader',lead);
+  setText('seriesgamests','Updated '+now12());
+}
+
+// ===================== FORM TABLES =====================
+function renderFormTables() {
+  // Try to fetch real recent games from ESPN team endpoints, fall back to known data
+  fetchTeamGames('29', function(games){ // UTA team ID
+    var form = games.length >= 5 ? games : UTA10;
+    buildFormTable('utaform', form, 'UTA', 'utaformts');
+  });
+  fetchTeamGames('25', function(games){ // VGK team ID
+    var form = games.length >= 5 ? games : VGK10;
+    buildFormTable('vgkform', form, 'VGK', 'vgkformts');
+  });
+}
+
+function fetchTeamGames(teamId, cb) {
+  fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/teams/'+teamId+'/schedule?season=2026&seasontype=2')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      var events = data.events || [];
+      var completed = events.filter(function(e){
+        var st=(e.competitions||[])[0];
+        var desc=st&&st.status&&st.status.type&&st.status.type.description;
+        return desc==='Final'||desc==='Game Over';
+      });
+      var last10 = completed.slice(-10).reverse();
+      var formatted = last10.map(function(e){
+        var comp=(e.competitions||[])[0];
+        var comps=(comp&&comp.competitors)||[];
+        var home=comps.find(function(c){return c.homeAway==='home';});
+        var away=comps.find(function(c){return c.homeAway==='away';});
+        var team=comps.find(function(c){return c.team&&c.team.id===teamId;});
+        var opp=comps.find(function(c){return !team||(c.team&&c.team.id!==teamId);});
+        var win=team&&team.winner;
+        var ts=team&&team.score;
+        var os=opp&&opp.score;
+        var oppName=opp&&opp.team&&(opp.team.abbreviation||'OPP');
+        var d=e.date?new Date(e.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
+        return {o:oppName,s:ts+'-'+os,w:win,d:d};
+      });
+      cb(formatted.length>=5?formatted:[]);
+    })
+    .catch(function(){cb([]);});
+}
+
+function buildFormTable(elId, games, team, tsId) {
+  var el=document.getElementById(elId);
+  if(!el) return;
+  var src = games.length > 0 ? games : (team==='UTA'?UTA10:VGK10);
+  // Include playoff games at top
+  var playoffRows=PLAYOFF.filter(function(g){return g.status==='final'&&g.uta!==null;});
+  var html='';
+  if(playoffRows.length>0){
+    html+='<div style="font-size:10px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.06em;padding:4px 0 2px">Playoffs</div>';
+    playoffRows.forEach(function(g){
+      var win=team==='UTA'?g.uta>g.vgk:g.vgk>g.uta;
+      var score=team==='UTA'?g.uta+'-'+g.vgk:g.vgk+'-'+g.uta;
+      var opp=team==='UTA'?'VGK':'UTA';
+      html+='<div class="sr"><span class="sl">G'+g.g+' vs '+opp+' ('+g.date+')</span><span style="display:flex;align-items:center;gap:8px"><span class="sv">'+score+'</span><span class="chip '+(win?'g':'r')+'">'+(win?'W':'L')+'</span></span></div>';
+    });
+    html+='<div style="font-size:10px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.06em;padding:6px 0 2px">Regular season (last '+(Math.min(src.length,10))+')</div>';
+  }
+  html+=src.slice(0,10).map(function(g){
+    return '<div class="sr"><span class="sl">vs '+g.o+(g.d?' ('+g.d+')':'')+'</span><span style="display:flex;align-items:center;gap:8px"><span class="sv">'+g.s+'</span><span class="chip '+(g.w?'g':'r')+'">'+(g.w?'W':'L')+'</span></span></div>';
+  }).join('');
+  el.innerHTML=html;
+  var ts=document.getElementById(tsId);if(ts)ts.textContent='Updated '+now12();
+}
+
+// ===================== GAME CONTEXT =====================
+function getCtx() {
+  var base='SERIES: Game 1 tied 1-1 after 2 periods. Cooley scored first (1st 19:49, assist Schmidt+Crouse). Sissons tied it (2nd 3:44, assist Smith+McNabb). Carter Hart starting for VGK (not Schmid). P1 stats: Shots UTA 11-9, Hits UTA 10-15 VGK, FO% VGK 61.1%, Blocks UTA 7-4. Projected lines UTA: Keller-Schmaltz-Crouse, Cooley-Yamamoto-Guenther, Peterka-Kerfoot-Carcone. VGK: Marner-Eichel-Stone, Barbashev-Howden-Dorofeyev.';
+  if (!liveGame) return base;
+  var d=getUTAVGKScores(liveGame);
+  var scoreStr='UTA '+(d.uta?d.uta.score:0)+' VGK '+(d.vgk?d.vgk.score:0);
+  var stStr=d.status;
+  var st=d.comp&&d.comp.status;
+  var perStr=st&&st.period?'Period '+st.period+(st.displayClock?' '+st.displayClock+' remaining':''):'';
+  base='LIVE ESPN: '+scoreStr+' | '+stStr+' | '+perStr+' | '+base;
+  if (richData&&richData.boxscore&&richData.boxscore.teams){
+    var bteams=richData.boxscore.teams;
+    bteams.forEach(function(t){
+      var abbr=t.team&&t.team.abbreviation;
+      var stats=(t.statistics||[]).map(function(s){return s.name+':'+s.displayValue;}).join(',');
+      if(stats)base+=' | '+abbr+' box: '+stats;
+    });
+  }
+  if(richData&&richData.scoringPlays&&richData.scoringPlays.length){
+    base+=' | GOALS: '+richData.scoringPlays.map(function(p){
+      var per=(p.period&&p.period.displayValue)||'';
+      var clk=(p.clock&&p.clock.displayValue)||'';
+      var tm=(p.team&&p.team.abbreviation)||'';
+      return per+' '+clk+' '+tm+': '+(p.text||'goal');
+    }).join('; ');
+  }
   return base;
 }
 
-var BASE_CTX = 'Utah (43-28-11, Wild Card #1) vs Vegas (39-26-17, Pacific #1). ' +
-  'Utah won season series 2-1, outscored VGK 10-5. Mar 19: Utah shut out VGK 4-0. ' +
-  'Vegas used 4 goalies all season; Schmid (.893 SV%) out since Mar 21. Karlsson out injured. ' +
-  'Utah: Keller 88pts, Schmaltz 74pts, Guenther 40G, Cooley 24G, Peterka 25G. ' +
-  'VGK: Eichel 90pts, Marner 80pts, Dorofeyev 37G. ' +
-  'UTA PP 18th. VGK PP 6th (major threat). VGK PK 7th. ' +
-  'Tourigny identity: speed and transition. Tortorella took over VGK at game 74, went 7-0-1.';
+var SERIES_CTX = 'Utah Mammoth (Wild Card #1, 43-28-11) vs Vegas Golden Knights (Pacific #1, 39-26-17). Utah won reg season series 2-1, outscored VGK 10-5. Shutout VGK 4-0 on Mar 19 (accelerated Cassidy firing). VGK started Carter Hart (6-0-0, 1.66 GAA, .930 SV%) not Schmid who hasnt played since Mar 21. William Karlsson out injured. UTA: Keller 88pts, Schmaltz 74pts, Guenther 40G/73pts, Cooley 24G (had 4G in single reg season game vs VGK), Peterka 25G. VGK: Eichel 90pts, Marner 80pts, Stone 73pts, Dorofeyev 37G, Barbashev 61pts. UTA PP 18th (20%), VGK PP 6th (24.6%). VGK PK 7th (81.4%). UTA PK 19th (78.1%). Tourigny identity: speed and transition. Tortorella took over VGK at game 74, went 7-0-1. 10 UTA players making playoff debut. VGK has 11 players from 2023 Cup.';
 
-function getPrompt(type, ctx) {
-  var SYS = 'You are elite NHL analyst for the Utah Mammoth. Bold, specific, tactical. ' +
-    'Write clean HTML paragraphs — no markdown, no asterisks, no bullet symbols. ' +
-    '<strong> tags for player names, key numbers, critical terms.';
-  var prompts = {
-    overview: ctx + '\n\n' + BASE_CTX + '\n\nWrite 3 sharp tactical paragraphs: (1) What this score means right now. (2) What Utah MUST do to win. (3) Key player to watch. Be direct and specific.',
-    deep: ctx + '\n\n' + BASE_CTX + '\n\nDeep tactical analysis in 4 sections using <strong> section headers: 1. PERIOD BREAKDOWN 2. KEY MOMENTS 3. WHATS WORKING / NOT WORKING 4. FINAL TACTICAL INSTRUCTIONS for Utah. Name names. Be a real bench coach.',
-    shields: ctx + '\n\n' + 'Utah weaknesses: (1) PP 18th, VGK PK 7th. (2) 10 playoff debutants. (3) VGK held 5v5 xG edge in all 3 regular season meetings. (4) Cooley line defensive lapses. (5) Vejmelka first playoff start. (6) VGK on 8-game Torts unbeaten run. Based on live game state, give 6 specific updated shield strategies. What needs to change NOW?',
-    series: ctx + '\n\n' + BASE_CTX + '\n\nProvide: (1) GAME 1 VERDICT. (2) SERIES FORECAST for remaining games. (3) X FACTOR player each side. (4) UTAH PATH TO WIN games 2-7. (5) BOLD PREDICTION — winner and games. Be specific and decisive.'
-  };
-  return { system: SYS, user: prompts[type] || prompts.overview };
+// ===================== AI ANALYSIS =====================
+var PROMPTS = {
+  overview: function(ctx){ return ctx+'\n\n'+SERIES_CTX+'\n\nWrite 3 sharp tactical paragraphs: (1) What the current G1 game state means. (2) What Utah MUST do in the 3rd period or to win. (3) Key player matchup to watch. Use <strong> tags for names and numbers.'; },
+  deep: function(ctx){ return ctx+'\n\n'+SERIES_CTX+'\n\nDeep breakdown in 4 labeled sections: 1. PERIOD BREAKDOWN 2. KEY MOMENTS 3. WHATS WORKING/NOT 4. TACTICAL INSTRUCTIONS for 3rd period. Name names. Be a bench coach. <strong> tags for emphasis.'; },
+  knights: function(ctx){ return ctx+'\n\n'+SERIES_CTX+'\n\nBased on G1 actual performance, update the scouting report on each Knights player: Eichel, Marner, Stone, Dorofeyev, Barbashev, Hart. What has each shown or NOT shown so far? How should Utah adjust? Carter Hart started (not Schmid) - update the goaltending analysis. <strong> tags.'; },
+  shields: function(ctx){ return ctx+'\n\n'+SERIES_CTX+'\n\nUtah weaknesses: (1) PP 18th vs VGK PK 7th. (2) 10 playoff debutants - nerves. (3) VGK dominated faceoffs P1 (61.1%). (4) Cooley line defensive lapses. (5) Vejmelka first playoff start. Based on ACTUAL G1 game so far, update each shield. What changed? What needs immediate adjustment in P3? Write as a bench coach.'; },
+  series: function(ctx){ return ctx+'\n\n'+SERIES_CTX+'\n\nBased on actual G1 performance: (1) G1 VERDICT after 2 periods. (2) SERIES FORECAST how remaining games play out. (3) X FACTOR player each side. (4) UTAH PATH TO WIN. (5) BOLD PREDICTION series winner and games. Be specific.'; }
+};
+
+var TSIDS = {overview:'ovts',deep:'deepts',knights:'knightsts',shields:'shieldsts',series:'seriests'};
+var CIDS = {overview:'ai-overview',deep:'ai-deep',knights:'ai-knights',shields:'ai-shields',series:'ai-series',tactics:'ai-tactics'};
+
+function runAI(type) {
+  if (!KEY) { document.getElementById('apibanner').style.display='block'; return; }
+  var el=document.getElementById(CIDS[type]);
+  if(!el) return;
+  el.innerHTML='<div class="thinking"><span>Analyzing live ESPN data</span><div class="tdots"><span></span><span></span><span></span></div></div>';
+  var ctx=getCtx();
+  var pfn=PROMPTS[type];if(!pfn)return;
+  var prompt=pfn(ctx);
+  var sys='You are an elite NHL analyst for the Utah Mammoth. Bold, specific, tactical. Use <strong> for player names and key stats. Clean HTML paragraphs only. Reference ACTUAL G1 data when relevant. No markdown, no asterisks, no bullet symbols.';
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:prompt}]})
+  }).then(function(r){return r.json();}).then(function(data){
+    if(data.error){el.innerHTML='<div class="errbanner">API Error: '+(data.error.message||'Unknown')+'</div>';return;}
+    var txt='';if(Array.isArray(data.content))data.content.forEach(function(b){if(b.text)txt+=b.text;});
+    if(!txt){el.innerHTML='<p style="color:var(--muted)">No response. Try again.</p>';return;}
+    var html=txt.includes('<p>')?txt:'<p>'+txt.replace(/\n\n+/g,'</p><p>').replace(/\n/g,'<br>')+'</p>';
+    el.innerHTML=html;
+    if(type==='deep'){var tac=document.getElementById('ai-tactics');if(tac)tac.innerHTML=html;}
+    var ts=document.getElementById(TSIDS[type]);if(ts)ts.textContent='Updated '+now12();
+  }).catch(function(err){el.innerHTML='<div class="errbanner">Connection error: '+err.message+'</div>';});
 }
 
-var CONTENT_IDS = { overview:'ai-overview-content', deep:'ai-deep-content', shields:'ai-shields-content', series:'ai-series-content' };
-var TS_IDS = { overview:'overview-timestamp', deep:'deep-timestamp', shields:'shields-timestamp', series:'series-timestamp' };
-
-function runAnalysis(type) {
-  if (!apiKey) { document.getElementById('api-setup-banner').style.display = 'block'; return; }
-  var contentEl = document.getElementById(CONTENT_IDS[type]);
-  if (!contentEl) return;
-  contentEl.innerHTML = '<div class="thinking"><span>Claude is pulling live ESPN data and analyzing</span><div class="thinking-dots"><span></span><span></span><span></span></div></div>';
-  var ctx = getGameContext();
-  var p = getPrompt(type, ctx);
-  fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      system: p.system,
-      messages: [{ role: 'user', content: p.user }]
-    })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(data){
-    if (data.error) { contentEl.innerHTML = '<div class="error-banner">API Error: ' + (data.error.message || 'Unknown error') + '</div>'; return; }
-    var text = '';
-    if (Array.isArray(data.content)) data.content.forEach(function(b){ if (b.text) text += b.text; });
-    if (!text) { contentEl.innerHTML = '<p style="color:var(--text-muted)">No response. Try again.</p>'; return; }
-    var html = text.includes('<p>') ? text : '<p>' + text.replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
-    contentEl.innerHTML = html;
-    if (type === 'deep') { var tac = document.getElementById('ai-tactics-content'); if (tac) tac.innerHTML = html; }
-    var ts = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    var tsEl = document.getElementById(TS_IDS[type]);
-    if (tsEl) tsEl.textContent = 'Updated ' + ts;
-  })
-  .catch(function(err){ contentEl.innerHTML = '<div class="error-banner">Connection error: ' + err.message + '</div>'; });
-}
-
+// ===================== KNIGHTS DATA =====================
 var KNIGHTS = [
-  {name:'Jack Eichel',pos:'C',initials:'JE',threat:95,accent:'#E8362A',bg:'rgba(232,54,42,0.12)',stats:'90 pts (27G/63A) · 74 GP',
-   w:['High turnover rate under full-speed neutral zone pressure','Doesn\'t love physicality — early clean hits rattle him','Playoff production dips vs elite defensive pairs','Open-ice dependent — deny north-south speed'],
-   e:['Assign Sergachev (Cup 2025) to shadow Eichel every shift','Match Cooley\'s line vs Eichel — make it a foot race, not a skill duel','Hard forecheck on VGK breakouts — make him start from deep','Force him east-west only. Never let him gain north-south momentum']},
-  {name:'Mitch Marner',pos:'C/RW',initials:'MM',threat:88,accent:'#C8A84B',bg:'rgba(200,168,75,0.12)',stats:'80 pts (24G/56A) · 81 GP',
-   w:['Career pattern of wilting in high-pressure playoff moments','Turnover-prone when physically engaged in corners','Still adapting to Tortorella\'s new system in Vegas','Skating edge disappears in board battles'],
-   e:['Physical from the first shift — before he finds rhythm','Use Lawson Crouse (6\'4") to punish him along the boards','Deny all open ice — contest every puck touch','Exploit his defensive gaps on the rush']},
-  {name:'Pavel Dorofeyev',pos:'RW',initials:'PD',threat:80,accent:'#2ECC71',bg:'rgba(46,204,113,0.1)',stats:'64 pts (37G/27A) · 82 GP',
-   w:['Pure finisher — limited playmaking under pressure','Below-average defensive zone awareness','Reverts to perimeter play when denied clean looks','Not a puck-battle player'],
-   e:['Cut off the Eichel-to-Dorofeyev feed before he touches it','Collapse the slot — deny all rebound positioning','Schmidt\'s mobility can clog his shooting lanes','Force him to create from behind the net']},
-  {name:'Mark Stone',pos:'RW/C',initials:'MS',threat:74,accent:'#3A7BD5',bg:'rgba(58,123,213,0.1)',stats:'73 pts · +26 · 33 yrs',
-   w:['Durability questions — managed ice time in second half','Skating speed has declined from prime years','May be limited minutes by Tortorella','Transition defense is slower'],
-   e:['Attack his side in transition — agility is no longer elite','Guenther and Peterka\'s speed exposes him on back-checks','Target him late in shifts — after 40+ seconds of ice time','Draw him from the slot, then exploit the backdoor']},
-  {name:'Akira Schmid',pos:'G',initials:'AS',threat:65,accent:'#F39C12',bg:'rgba(243,156,18,0.1)',stats:'2.59 GAA · .893 SV% · 0 games since Mar 21',
-   w:['No game action since March 21 — weeks of rust','Post-Olympic break struggles in second half','First NHL playoff series as primary starter','Never faced a high-volume rush attack like Utah\'s'],
-   e:['Attack early and in waves — deny him rhythm in Game 1','High volume from all zones — expose rustiness','Replicate the 4-0 shutout approach from March','Force lateral movement post-to-post — test the long layoff']},
-  {name:'Ivan Barbashev',pos:'C/LW',initials:'IB',threat:62,accent:'#7A99BB',bg:'rgba(122,153,187,0.1)',stats:'61 pts (23G/38A) · 82 GP',
-   w:['Predictable offensive zone patterns under pressure','Speed deficit vs Utah\'s elite skating forwards','May overplay under pressure — Cup experience cuts both ways'],
-   e:['Match Hayton\'s defensive game against him','Utah counter-attack speed turns Barbashev into a liability','Force him wide — deny the middle completely']}
+  {name:'Jack Eichel',pos:'C',ini:'JE',threat:95,ac:'#E8362A',bg:'rgba(232,54,42,0.12)',
+   stats:'90 pts (27G/63A) \u00b7 74 GP',
+   playoffNote:'G1: Expected to lead VGK attack. Scored in reg season meeting Nov 20.',
+   playoffClass:'warn',
+   w:['Turnover-prone under full-speed neutral zone pressure','Has not loved physicality historically','Playoff production dips vs elite defensive pairs','Open ice dependent \u2014 deny north-south space'],
+   e:['Match Sergachev (Cup 2025) to shadow every shift','Cooley speed line forces foot race not skill duel','Hard forecheck \u2014 make him start from deep own zone','Force east-west only, deny north-south momentum']},
+  {name:'Mitch Marner',pos:'C/RW',ini:'MM',threat:88,ac:'#C8A84B',bg:'rgba(200,168,75,0.12)',
+   stats:'80 pts (24G/56A) \u00b7 81 GP',
+   playoffNote:'G1: New to Vegas system. This is his real playoff test after Leafs failures.',
+   playoffClass:'warn',
+   w:['Career pattern of disappearing in high-pressure playoff moments','Turnover-prone in corners under physical engagement','Still adapting to Tortorella system in Vegas','Skating edge disappears in board battles'],
+   e:['Physical from the first shift \u2014 set tone before he finds rhythm','Lawson Crouse (6\'4") punishes him along boards every shift','Deny all open ice \u2014 contest every puck touch','Exploit his defensive gaps on transition']},
+  {name:'Pavel Dorofeyev',pos:'RW',ini:'PD',threat:80,ac:'#2ECC71',bg:'rgba(46,204,113,0.1)',
+   stats:'64 pts (37G/27A) \u00b7 82 GP',
+   playoffNote:'G1: Watch for set-play opportunities with Eichel feeding him.',
+   playoffClass:'warn',
+   w:['Pure finisher \u2014 limited creation under pressure','Below-average defensive zone awareness','Reverts to perimeter when denied clean looks','Not a puck-battle player'],
+   e:['Cut off Eichel-to-Dorofeyev feed before he touches it','Collapse slot \u2014 deny all rebound positioning','Schmidt mobility clogs his shooting lanes','Force him behind the net \u2014 not a playmaker']},
+  {name:'Carter Hart',pos:'G',ini:'CH',threat:78,ac:'#F39C12',bg:'rgba(243,156,18,0.1)',
+   stats:'6-0-0 stretch \u00b7 1.66 GAA \u00b7 .930 SV%',
+   playoffNote:'G1 UPDATE: Hart starting, not Schmid. He\'s locked in and comfortable with Tortorella. Only playoff run was 2020 Flyers bubble.',
+   playoffClass:'warn',
+   w:['Limited playoff experience \u2014 2020 bubble only','Unknown how he responds to must-win moments','First time facing Utah\u2019s rush speed in a series','Confidence run could end under sustained pressure'],
+   e:['Attack early waves \u2014 test his reads on Utah rush offense','High volume from all zones in first 10 minutes','Crash the net hard \u2014 make him battle through traffic','Force lateral movement quickly \u2014 test tracking at speed']},
+  {name:'Mark Stone',pos:'RW/C',ini:'MS',threat:74,ac:'#3A7BD5',bg:'rgba(58,123,213,0.1)',
+   stats:'73 pts (28G/45A) \u00b7 60 GP season',
+   playoffNote:'G1: Playing top line with Eichel-Marner. Ice time may be managed.',
+   playoffClass:'warn',
+   w:['60 GP season \u2014 durability still a question','Skating speed has declined from prime years','Tortorella managing his minutes carefully','Transition defense is slower'],
+   e:['Attack his side in transition \u2014 agility is not elite anymore','Guenther and Peterka speed exposes him on back-check','Target him late in shifts after 40+ seconds on ice','Draw him from slot then exploit backdoor']},
+  {name:'Ivan Barbashev',pos:'C/LW',ini:'IB',threat:62,ac:'#7A99BB',bg:'rgba(122,153,187,0.1)',
+   stats:'61 pts (23G/38A) \u00b7 82 GP',
+   playoffNote:'G1: On 3rd line with Howden-Dorofeyev. Defensive role important.',
+   playoffClass:'good',
+   w:['Speed deficit vs Utah\'s elite skating forwards','Predictable offensive zone patterns','May overplay in big moments \u2014 veteran vet'],
+   e:['Match Hayton defensive game against him','Utah counter-attack speed turns him into liability','Force him wide \u2014 deny the middle completely']}
 ];
 
-function buildKnightCards() {
-  var grid = document.getElementById('knight-player-grid');
-  if (!grid) return;
-  grid.innerHTML = KNIGHTS.map(function(p, i) {
-    var tc = p.threat > 85 ? 'var(--danger)' : p.threat > 74 ? 'var(--warn)' : 'var(--success)';
-    return '<div class="player-card" style="--card-accent:' + p.accent + '" onclick="selectKnight(' + i + ')">' +
-      '<div class="player-initials-sm" style="background:' + p.bg + ';color:' + p.accent + '">' + p.initials + '</div>' +
-      '<div class="player-name">' + p.name + '</div>' +
-      '<div class="player-pos">' + p.pos + '</div>' +
-      '<div class="player-stat-line">' + p.stats + '</div>' +
-      '<div class="threat-meter"><div class="threat-fill" style="width:' + p.threat + '%;background:' + tc + '"></div></div>' +
-      '<div class="threat-label-row"><span>THREAT</span><span style="color:' + tc + ';font-weight:600">' + p.threat + '/100</span></div>' +
-      '</div>';
+function buildKnights() {
+  var grid=document.getElementById('knight-grid');if(!grid)return;
+  grid.innerHTML=KNIGHTS.map(function(p,i){
+    var tc=p.threat>85?'var(--red)':p.threat>74?'var(--warn)':'var(--green)';
+    return '<div class="pc" style="--ca:'+p.ac+'" onclick="selectKnight('+i+')">' +
+      '<div class="pi" style="background:'+p.bg+';color:'+p.ac+'">'+p.ini+'</div>' +
+      '<div class="pname">'+p.name+'</div><div class="ppos">'+p.pos+'</div>' +
+      '<div class="pstat">'+p.stats+'</div>' +
+      '<div class="playoffnote '+p.playoffClass+'">'+p.playoffNote+'</div>' +
+      '<div class="thrm"><div class="thrf" style="width:'+p.threat+'%;background:'+tc+'"></div></div>' +
+      '<div class="thrl"><span>THREAT</span><span style="color:'+tc+';font-weight:600">'+p.threat+'/100</span></div>' +
+    '</div>';
   }).join('');
 }
 
 function selectKnight(i) {
-  document.querySelectorAll('.player-card').forEach(function(c, idx){ c.classList.toggle('selected', idx === i); });
-  var p = KNIGHTS[i];
-  var panel = document.getElementById('knight-detail-panel');
-  if (!panel) return;
-  panel.style.display = 'block';
-  var tc = p.threat > 85 ? 'var(--danger)' : p.threat > 74 ? 'var(--warn)' : 'var(--success)';
-  panel.innerHTML =
-    '<div class="detail-top">' +
-      '<div class="detail-avatar" style="background:' + p.bg + ';color:' + p.accent + '">' + p.initials + '</div>' +
-      '<div><div class="detail-name">' + p.name + '</div><div class="detail-sub">' + p.pos + ' · ' + p.stats + '</div></div>' +
-      '<div class="threat-score-box"><div class="threat-num" style="color:' + tc + '">' + p.threat + '</div><div class="threat-lbl">threat</div></div>' +
+  document.querySelectorAll('.pc').forEach(function(c,idx){c.classList.toggle('sel',idx===i);});
+  var p=KNIGHTS[i];
+  var panel=document.getElementById('knight-detail');if(!panel)return;
+  panel.style.display='block';
+  var tc=p.threat>85?'var(--red)':p.threat>74?'var(--warn)':'var(--green)';
+  panel.innerHTML=
+    '<div class="dtop">' +
+      '<div class="dav" style="background:'+p.bg+';color:'+p.ac+'">'+p.ini+'</div>' +
+      '<div><div class="dname">'+p.name+'</div><div class="dsub">'+p.pos+' \u00b7 '+p.stats+'</div>' +
+      '<div class="dplayoff">⚡ G1 update: '+p.playoffNote+'</div></div>' +
+      '<div class="tscbox"><div class="tsnum" style="color:'+tc+'">'+p.threat+'</div><div class="tslbl">threat</div></div>' +
     '</div>' +
-    '<div class="two-col">' +
-      '<div><div class="col-title red">⚠ Weaknesses</div>' + p.w.map(function(w){ return '<div class="bullet-item"><span class="bul red">✕</span><span>' + w + '</span></div>'; }).join('') + '</div>' +
-      '<div><div class="col-title green">✓ How Utah exploits</div>' + p.e.map(function(e){ return '<div class="bullet-item"><span class="bul green">→</span><span>' + e + '</span></div>'; }).join('') + '</div>' +
+    '<div class="twocol">' +
+      '<div><div class="coltitle red">⚠ Weaknesses</div>'+p.w.map(function(w){return '<div class="bi"><span class="bul red">\u2715</span><span>'+w+'</span></div>';}).join('')+'</div>' +
+      '<div><div class="coltitle green">✓ How Utah exploits</div>'+p.e.map(function(e){return '<div class="bi"><span class="bul green">\u2192</span><span>'+e+'</span></div>';}).join('')+'</div>' +
     '</div>';
-  panel.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
+// ===================== SHIELDS DATA =====================
 var SHIELDS = [
-  {risk:'HIGH',w:'Power play ranked 18th — VGK PK ranked 7th',d:'The biggest structural mismatch. VGK\'s elite PK with Eichel/Marner killing penalties is a nightmare for Utah\'s inconsistent PP.',s:'Focus on zone-time over shot quality. Tire their top PKers. Try non-traditional PP setups to confuse Tortorella. Keller must QB with authority. Staying out of the box matters more than converting.'},
-  {risk:'HIGH',w:'10 players making playoff debut — nerves are real',d:'VGK has 11 players from their 2023 Cup run. That experience in tight moments is tangible. Utah could panic under early adversity.',s:'Cup winners Sergachev, Schmidt, and Vanecek must set the tone pre-game and between periods. Match VGK\'s physical intensity from the first whistle. Respond to every hit — don\'t let Vegas define the physical tone.'},
-  {risk:'MED',w:'VGK held 5v5 xG edge in all 3 regular season meetings',d:'Despite winning 2-1, Utah\'s underlying numbers show VGK was the better possession team in all three games.',s:'Utah\'s rush offense generates chances xG models undervalue. Prioritize north-south speed over east-west possession. Vejmelka must steal at least one game early. Don\'t try to out-possess VGK.'},
-  {risk:'MED',w:'Cooley\'s line can get caught in defensive zone',d:'Cooley is an offensive force but can be caught in poor positioning when chasing play. Eichel\'s line will hunt this mismatch.',s:'Tourigny MUST match Cooley vs Barbashev/Hertl — NOT Eichel. Use Marino-Schmidt pair for the Eichel defensive matchup. Strict line matching at Delta Center is non-negotiable.'},
-  {risk:'MED',w:'Vejmelka\'s first playoffs as primary starter',d:'Career year (38 wins) but never been a playoff No. 1. VGK\'s high-danger generation and elite PP are formidable first tests.',s:'Utah\'s D corps must eliminate odd-man rushes — killers for a first-time playoff starter. Sergachev as defensive field marshal is critical. Vanecek (Cup winner) is a proven alternative if needed.'},
-  {risk:'LOW',w:'Tortorella\'s Vegas on historic 8-game unbeaten run',d:'The Torts Bump is historically temporary but timing into playoffs is dangerous. Team is energized.',s:'Utah needs to lead Game 1. Tortorella\'s system runs on emotional momentum. Utah\'s speed-and-transition identity is a favorable stylistic matchup — make them chase, never let them possess.'}
+  {risk:'HIGH',w:'Power play 18th \u2014 VGK PK 7th (81.4%)',d:'Biggest structural mismatch. UTA took a penalty in P1 but killed it. VGK will hunt power plays all game.',
+   s:'Stay out of the box in P3 \u2014 every UTA penalty is a high-danger threat. Keller must QB PP with authority on any opportunities. Consider new PP formations to confuse Tortorella.',
+   update:'G1 P1: UTA took roughing penalty but killed it. Durzi penalty also killed. Must maintain discipline in P3.'},
+  {risk:'HIGH',w:'10 playoff debutants \u2014 experience gap',d:'VGK has 11 Cup winners. Early game jitters are real, but Cooley scored the opening playoff goal calmly.',
+   s:'Cup winners Sergachev, Schmidt, Vanecek set the tone. Match VGK physicality from puck drop. Respond to every hit.',
+   update:'G1 UPDATE: Cooley scored first on his playoff debut. Debutants have shown well early. Schmidt assisted on opening goal.'},
+  {risk:'HIGH',w:'Faceoff dominance \u2014 VGK won 61.1% in P1',d:'VGK won 11 of 18 P1 draws. This is a critical weakness Utah hasn\'t solved. Possession flows from faceoffs.',
+   s:'Schmaltz and Cooley must win more draws in P3. Consider faceoff personnel changes. Losing draws kills transition game.',
+   update:'G1 LIVE: VGK dominating at 61.1% in P1. This is the biggest tactical problem emerging from the actual game. URGENT fix needed.'},
+  {risk:'MED',w:'Cooley line defensive lapses',d:'Cooley scored but can get caught in D-zone chasing plays. Eichel line will hunt this.',
+   s:'Match Cooley vs Barbashev/Hertl not Eichel. Use Marino-Schmidt pair for Eichel matchup. Strict line matching at Delta Center.',
+   update:'G1: Cooley scored opener. Tourigny must ensure he never faces Eichel-Marner-Stone line in P3.'},
+  {risk:'MED',w:'Vejmelka first playoff start',d:'Career year (38-20-3, 2.75 GAA, .897 SV%) but first playoff run. VGK will test him early in P3.',
+   s:'D corps must eliminate odd-man rushes. Sergachev as field marshal critical. Vanecek is experienced backup if needed.',
+   update:'G1: Vejmelka held after Sissons equalizer. Facing 1-1 tie entering P3 \u2014 must be sharp when it matters.'},
+  {risk:'LOW',w:'Tortorella bump \u2014 VGK 7-0-1 to end season',d:'Torts energy and structure visible in P1 (VGK won hits 15-10). Team is physical and focused.',
+   s:'Utah must use speed to counter Torts structure. Don\'t let VGK win battles along boards. Play north-south not east-west.',
+   update:'G1: VGK won the physicality battle (hits 15-10) but Utah won on shots (11-9). Speed identity working \u2014 keep it up.'}
 ];
 
 function buildShields() {
-  var list = document.getElementById('shields-list');
-  if (!list) return;
-  list.innerHTML = SHIELDS.map(function(s){
-    var rc = s.risk === 'HIGH' ? 'var(--danger)' : s.risk === 'MED' ? 'var(--warn)' : 'var(--success)';
-    return '<div class="shield-item">' +
-      '<div><div class="shield-label red">⚠ ' + s.risk + ' RISK</div>' +
-        '<div style="font-weight:600;font-size:14px;color:var(--text);margin-bottom:6px">' + s.w + '</div>' +
-        '<div class="shield-text">' + s.d + '</div></div>' +
-      '<div><div class="shield-label green">🛡 Shield strategy</div><div class="shield-text">' + s.s + '</div></div>' +
+  var list=document.getElementById('shields-list');if(!list)return;
+  list.innerHTML=SHIELDS.map(function(s){
+    var rc=s.risk==='HIGH'?'var(--red)':s.risk==='MED'?'var(--warn)':'var(--green)';
+    return '<div class="shi">' +
+      '<div><div class="shlbl red">⚠ '+s.risk+' RISK</div>' +
+        '<div style="font-weight:600;font-size:14px;color:var(--txt);margin-bottom:6px">'+s.w+'</div>' +
+        '<div class="shtxt">'+s.d+'</div>' +
+        '<div class="playoff-update">⚡ '+s.update+'</div></div>' +
+      '<div><div class="shlbl green">🛡 Shield strategy</div><div class="shtxt">'+s.s+'</div></div>' +
     '</div>';
   }).join('');
 }
 
-var SERIES_GAMES = [
-  {num:1,date:'Apr 19',loc:'@VGK',uta:null,vgk:null,status:'live'},
-  {num:2,date:'Apr 21',loc:'@VGK',uta:null,vgk:null,status:'upcoming'},
-  {num:3,date:'Apr 24',loc:'@UTA',uta:null,vgk:null,status:'upcoming'},
-  {num:4,date:'Apr 26',loc:'@UTA',uta:null,vgk:null,status:'upcoming'},
-  {num:5,date:'Apr 29',loc:'@VGK',uta:null,vgk:null,status:'upcoming',note:'If nec.'},
-  {num:6,date:'May 1', loc:'@UTA',uta:null,vgk:null,status:'upcoming',note:'If nec.'},
-  {num:7,date:'May 3', loc:'@VGK',uta:null,vgk:null,status:'upcoming',note:'If nec.'}
-];
-
-function buildSeriesTracker() {
-  var track = document.getElementById('series-games-track');
-  if (!track) return;
-  track.innerHTML = SERIES_GAMES.map(function(g){
-    var cls = 'game-box';
-    if (g.status === 'live') cls += ' live-game';
-    else if (g.uta !== null && g.uta > g.vgk) cls += ' uta-win';
-    else if (g.vgk !== null && g.vgk > g.uta) cls += ' vgk-win';
-    var inner = g.status === 'live'
-      ? '<div class="game-score-big" style="color:var(--danger)">LIVE</div><div style="font-size:10px;color:var(--danger);margin-top:2px">G1 In Progress</div>'
-      : g.uta !== null
-        ? '<div class="game-score-big">' + g.uta + '–' + g.vgk + '</div><div style="font-size:10px;color:' + (g.uta>g.vgk?'var(--gold)':'#aaa') + ';margin-top:2px">' + (g.uta>g.vgk?'UTA Win':'VGK Win') + '</div>'
-        : '<div style="font-size:13px;color:var(--text-dim)">' + (g.note||'—') + '</div>';
-    return '<div class="' + cls + '"><div class="game-num">G' + g.num + ' · ' + g.date + '</div><div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">' + g.loc + '</div>' + inner + '</div>';
-  }).join('');
-}
-
-var UTA_FORM=[{o:'WPG',s:'5-3',w:true},{o:'STL',s:'3-5',w:false},{o:'NSH',s:'4-1',w:true},{o:'CAR',s:'1-4',w:false},{o:'CGY',s:'1-4',w:false},{o:'EDM',s:'6-5',w:true},{o:'VAN',s:'7-4',w:true},{o:'SEA',s:'6-2',w:true},{o:'LA',s:'6-2',w:true},{o:'EDM',s:'2-5',w:false}];
-var VGK_FORM=[{o:'SEA',s:'4-1',w:true},{o:'WPG',s:'6-2',w:true},{o:'VAN',s:'2-1',w:true},{o:'EDM',s:'5-1',w:true},{o:'CGY',s:'6-3',w:true},{o:'VAN',s:'4-2',w:true},{o:'DAL',s:'3-2',w:true},{o:'EDM',s:'3-4',w:false},{o:'NSH',s:'1-4',w:false},{o:'BUF',s:'0-2',w:false}];
-
-function buildFormTables() {
-  ['uta','vgk'].forEach(function(team){
-    var games = team === 'uta' ? UTA_FORM : VGK_FORM;
-    var el = document.getElementById(team + '-form');
-    if (!el) return;
-    el.innerHTML = games.map(function(g){
-      return '<div class="stat-row"><span class="stat-label">vs ' + g.o + '</span><span style="display:flex;align-items:center;gap:8px"><span class="stat-value">' + g.s + '</span><span class="chip ' + (g.w?'green':'red') + '">' + (g.w?'W':'L') + '</span></span></div>';
-    }).join('');
-  });
-}
-
 // ===================== AGENT =====================
-var agentHistory = [];
-var agentBusy = false;
+var AGENT_SYS = 'You are the Utah Mammoth War Room Agent. You have LIVE ESPN game data and real G1 knowledge: Cooley scored first (P1 19:49, Schmidt+Crouse assist), Sissons tied it (P2 3:44, Smith+McNabb assist). Game tied 1-1. Carter Hart starting for VGK (not Schmid). P1 stats: Shots UTA 11-9, Hits VGK 15-10, FO% VGK 61.1%. Lines: UTA top=Keller-Schmaltz-Crouse, UTA 2nd=Yamamoto-Cooley-Guenther. VGK top=Marner-Eichel-Stone. '+SERIES_CTX+' Be direct, confident, specific. Use player names. Give real tactical opinions. Pro-Utah but honest. Under 200 words unless asked for detail. Use <strong> for names and numbers. Clean HTML paragraphs only.';
 
-var AGENT_SYSTEM = 'You are the Utah Mammoth War Room Agent — an elite NHL analyst embedded with the Mammoth coaching staff for the 2026 Stanley Cup Playoffs. ' +
-  'You receive LIVE ESPN data including real-time score, period, clock, box score stats (shots, hits, faceoffs, PPs), period-by-period scoring, game leaders, and recent play-by-play. ' +
-  'Use this live data to answer questions precisely — quote actual stats from the data, name actual scorers, reference real shot counts. ' +
-  'If the game is final, analyze it as a completed game. If live, give real-time advice. ' +
-  'Be direct, confident, and specific. Use player names freely. Give real tactical opinions — you are a trusted analyst, not a neutral commentator. ' +
-  'You are pro-Utah but honest about weaknesses. Keep answers focused and under 200 words unless a detailed breakdown is requested. ' +
-  'Use <strong> tags for player names and key numbers. Write in clean HTML — no markdown, no asterisks. ' +
-  'SERIES CONTEXT: Utah Mammoth (Wild Card #1, 43-28-11) vs Vegas Golden Knights (Pacific #1, 39-26-17). ' +
-  'Utah won season series 2-1, outscored VGK 10-5. Mar 19: Utah shut out VGK 4-0. ' +
-  'VGK used 4 goalies, Schmid (.893 SV%) out since Mar 21, Karlsson out injured. ' +
-  'Utah: Keller 88pts, Schmaltz 74pts, Guenther 40G, Cooley 24G, Peterka 25G, Crouse 24G, Sergachev 59pts (Cup 2025), Schmidt (Cup 2025), Vejmelka 38W. ' +
-  'VGK: Eichel 90pts, Marner 80pts, Stone 73pts, Dorofeyev 37G, Barbashev 61pts. ' +
-  'UTA PP 18th, VGK PP 6th (major threat), VGK PK 7th. ' +
-  'Tourigny identity: speed and transition. Tortorella took over VGK at game 74, went 7-0-1. ' +
-  '10 Utah players making playoff debut. VGK has 11 players from 2023 Cup run.';
+function agKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();agSend();}}
+function sugSend(el){var inp=document.getElementById('aginput');if(inp){inp.value=el.textContent;agSend();}}
 
-function agentKeydown(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); agentSend(); }
+function agSend() {
+  if(agBusy)return;
+  if(!KEY){document.getElementById('apibanner').style.display='block';return;}
+  var inp=document.getElementById('aginput');if(!inp)return;
+  var txt=inp.value.trim();if(!txt)return;
+  inp.value='';
+  agAppend('user',txt);
+  agHist.push({role:'user',content:'[LIVE: '+getCtx()+'] '+txt});
+  var msgs=agHist.slice(-16);
+  agTyping();agBusy=true;
+  var sb=document.getElementById('agsend');if(sb)sb.disabled=true;
+  var st=document.getElementById('agst');if(st)st.textContent='Agent is thinking\u2026';
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:AGENT_SYS,messages:msgs})
+  }).then(function(r){return r.json();}).then(function(data){
+    agRemoveTyping();
+    if(data.error){agAppend('assistant','<span style="color:var(--red)">Error: '+(data.error.message||'Unknown')+'</span>');agHist.pop();return;}
+    var txt2='';if(Array.isArray(data.content))data.content.forEach(function(b){if(b.text)txt2+=b.text;});
+    if(!txt2)txt2='No response. Try again.';
+    var html=txt2.includes('<')?txt2:txt2.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+    agAppend('assistant',html);
+    agHist.push({role:'assistant',content:txt2});
+    if(agHist.length>20)agHist=agHist.slice(-20);
+  }).catch(function(err){agRemoveTyping();agAppend('assistant','<span style="color:var(--red)">Error: '+err.message+'</span>');agHist.pop();})
+  .finally?agFinally():setTimeout(agFinally,100);
 }
 
-function sendSuggestion(el) {
-  var inp = document.getElementById('agent-input');
-  if (inp) { inp.value = el.textContent; agentSend(); }
+function agFinally(){agBusy=false;var sb=document.getElementById('agsend');if(sb)sb.disabled=false;var st=document.getElementById('agst');if(st)st.textContent='Live ESPN data \u00b7 Claude AI \u00b7 Conversation memory active';}
+
+function agAppend(role,html){
+  var feed=document.getElementById('agmsg');if(!feed)return;
+  var t=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  var div=document.createElement('div');div.className='msg '+role;
+  div.innerHTML='<div class="mbub">'+html+'</div><div class="mtime">'+t+'</div>';
+  feed.appendChild(div);feed.scrollTop=feed.scrollHeight;
 }
 
-function agentSend() {
-  if (agentBusy) return;
-  if (!apiKey) { document.getElementById('api-setup-banner').style.display = 'block'; return; }
-  var inp = document.getElementById('agent-input');
-  if (!inp) return;
-  var text = inp.value.trim();
-  if (!text) return;
-  inp.value = '';
-  inp.style.height = 'auto';
-
-  appendMsg('user', text);
-  agentHistory.push({ role: 'user', content: text });
-
-  var liveCtx = getGameContext();
-  // Inject live context into the most recent user message for the API call
-  var messagesForApi = agentHistory.slice(0, -1).concat([{
-    role: 'user',
-    content: '[LIVE ESPN DATA: ' + liveCtx + '] ' + text
-  }]);
-
-  showTyping();
-  agentBusy = true;
-  var sendBtn = document.getElementById('agent-send-btn');
-  if (sendBtn) sendBtn.disabled = true;
-  var statusEl = document.getElementById('agent-status');
-  if (statusEl) statusEl.textContent = 'Agent is thinking...';
-
-  fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 600,
-      system: AGENT_SYSTEM,
-      messages: messagesForApi
-    })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(data){
-    removeTyping();
-    if (data.error) {
-      appendMsg('assistant', '<span style="color:var(--danger)">Error: ' + (data.error.message||'Unknown error') + '</span>');
-      agentHistory.pop();
-      return;
-    }
-    var text = '';
-    if (Array.isArray(data.content)) data.content.forEach(function(b){ if (b.text) text += b.text; });
-    if (!text) text = 'No response. Try again.';
-    // Convert plain text to HTML if needed
-    var html = text.includes('<') ? text : text.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
-    appendMsg('assistant', html);
-    agentHistory.push({ role: 'assistant', content: text });
-    // Keep history from growing too long (last 20 messages)
-    if (agentHistory.length > 20) agentHistory = agentHistory.slice(-20);
-  })
-  .catch(function(err){
-    removeTyping();
-    appendMsg('assistant', '<span style="color:var(--danger)">Connection error: ' + err.message + '</span>');
-    agentHistory.pop();
-  })
-  .finally(function(){
-    agentBusy = false;
-    var sb = document.getElementById('agent-send-btn');
-    if (sb) sb.disabled = false;
-    var st = document.getElementById('agent-status');
-    if (st) st.textContent = 'Live ESPN data · Claude AI · Conversation memory active';
-  });
+function agTyping(){
+  var feed=document.getElementById('agmsg');if(!feed)return;
+  var div=document.createElement('div');div.className='msg assistant';div.id='agtyping';
+  div.innerHTML='<div class="mbub"><div class="tdots"><span></span><span></span><span></span></div></div>';
+  feed.appendChild(div);feed.scrollTop=feed.scrollHeight;
 }
-
-function appendMsg(role, html) {
-  var feed = document.getElementById('agent-messages');
-  if (!feed) return;
-  var now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  var div = document.createElement('div');
-  div.className = 'msg ' + role;
-  div.innerHTML = '<div class="msg-bubble">' + html + '</div><div class="msg-time">' + now + '</div>';
-  feed.appendChild(div);
-  feed.scrollTop = feed.scrollHeight;
-}
-
-function showTyping() {
-  var feed = document.getElementById('agent-messages');
-  if (!feed) return;
-  var div = document.createElement('div');
-  div.className = 'msg assistant typing-indicator';
-  div.id = 'typing-indicator';
-  div.innerHTML = '<div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
-  feed.appendChild(div);
-  feed.scrollTop = feed.scrollHeight;
-}
-
-function removeTyping() {
-  var el = document.getElementById('typing-indicator');
-  if (el) el.remove();
-}
-
+function agRemoveTyping(){var el=document.getElementById('agtyping');if(el)el.remove();}
 </script>
 </body>
 </html>
