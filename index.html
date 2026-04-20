@@ -470,8 +470,10 @@ function fetchSummary(gameId) {
       richData = data;
       updateFeed(data);
       buildOverviewCards();
-      // Update playoff series with live score
       updatePlayoffFromLive();
+      // Refresh form tables so playoff row shows current live score
+      buildFormTable('utaform', UTA10, 'UTA', 'utaformts');
+      buildFormTable('vgkform', VGK10, 'VGK', 'vgkformts');
     })
     .catch(function(e){console.warn('summary fail',e);});
 }
@@ -683,6 +685,17 @@ function renderStatsCard(n) {
   if(!c) return;
   var html='';
 
+  // Determine current period for label
+  var curPeriod = '';
+  if (liveGame) {
+    var compS = (liveGame.competitions||[])[0];
+    var stS = compS && compS.status;
+    if (stS && stS.period) {
+      var pnS = ['','1st','2nd','3rd','OT','2OT'];
+      curPeriod = (pnS[stS.period]||'P'+stS.period) + ' period';
+    }
+  }
+
   if(richData&&richData.boxscore&&richData.boxscore.teams){
     var bteams=richData.boxscore.teams;
     var utab=bteams.find(function(t){return t.team&&t.team.abbreviation==='UTA';});
@@ -704,7 +717,7 @@ function renderStatsCard(n) {
       html+='<span style="text-align:left;color:'+(vb?'#E8362A':'#7A99BB')+'">'+vv+'</span>';
     });
     html+='</div>';
-    var ts=document.getElementById('ts-stats');if(ts)ts.textContent='Live box score';
+    var ts=document.getElementById('ts-stats');if(ts)ts.textContent='Live'+(curPeriod?' · thru '+curPeriod:'')+' · '+now12();
   } else {
     // G1 known period stats
     html+='<div style="font-size:10px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">G1 Period 1 (known)</div>';
@@ -769,6 +782,12 @@ function renderEdgeCard(n) {
 function refreshAll(){
   var ic=document.getElementById('reficon');if(ic)ic.classList.add('spin');
   loadLiveScore();
+  // Also force re-fetch of game summary for latest stats
+  if (liveGame) {
+    var comp = (liveGame.competitions||[])[0];
+    if (comp && comp.id) fetchSummary(comp.id);
+    else if (liveGame.id) fetchSummary(liveGame.id);
+  }
   setTimeout(function(){var ic2=document.getElementById('reficon');if(ic2)ic2.classList.remove('spin');},1500);
 }
 
@@ -795,69 +814,74 @@ function renderSeriesTracker() {
 
 // ===================== FORM TABLES =====================
 function renderFormTables() {
-  // Try to fetch real recent games from ESPN team endpoints, fall back to known data
-  fetchTeamGames('29', function(games){ // UTA team ID
-    var form = games.length >= 5 ? games : UTA10;
-    buildFormTable('utaform', form, 'UTA', 'utaformts');
-  });
-  fetchTeamGames('25', function(games){ // VGK team ID
-    var form = games.length >= 5 ? games : VGK10;
-    buildFormTable('vgkform', form, 'VGK', 'vgkformts');
-  });
-}
-
-function fetchTeamGames(teamId, cb) {
-  fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/teams/'+teamId+'/schedule?season=2026&seasontype=2')
-    .then(function(r){return r.json();})
-    .then(function(data){
-      var events = data.events || [];
-      var completed = events.filter(function(e){
-        var st=(e.competitions||[])[0];
-        var desc=st&&st.status&&st.status.type&&st.status.type.description;
-        return desc==='Final'||desc==='Game Over';
-      });
-      var last10 = completed.slice(-10).reverse();
-      var formatted = last10.map(function(e){
-        var comp=(e.competitions||[])[0];
-        var comps=(comp&&comp.competitors)||[];
-        var home=comps.find(function(c){return c.homeAway==='home';});
-        var away=comps.find(function(c){return c.homeAway==='away';});
-        var team=comps.find(function(c){return c.team&&c.team.id===teamId;});
-        var opp=comps.find(function(c){return !team||(c.team&&c.team.id!==teamId);});
-        var win=team&&team.winner;
-        var ts=team&&team.score;
-        var os=opp&&opp.score;
-        var oppName=opp&&opp.team&&(opp.team.abbreviation||'OPP');
-        var d=e.date?new Date(e.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
-        return {o:oppName,s:ts+'-'+os,w:win,d:d};
-      });
-      cb(formatted.length>=5?formatted:[]);
-    })
-    .catch(function(){cb([]);});
+  // Form tables use seeded real data (from API) + live playoff results on top.
+  // ESPN team schedule endpoints are unreliable cross-origin; real data is seeded below.
+  buildFormTable('utaform', UTA10, 'UTA', 'utaformts');
+  buildFormTable('vgkform', VGK10, 'VGK', 'vgkformts');
 }
 
 function buildFormTable(elId, games, team, tsId) {
-  var el=document.getElementById(elId);
-  if(!el) return;
-  var src = games.length > 0 ? games : (team==='UTA'?UTA10:VGK10);
-  // Include playoff games at top
-  var playoffRows=PLAYOFF.filter(function(g){return g.status==='final'&&g.uta!==null;});
-  var html='';
-  if(playoffRows.length>0){
-    html+='<div style="font-size:10px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.06em;padding:4px 0 2px">Playoffs</div>';
-    playoffRows.forEach(function(g){
-      var win=team==='UTA'?g.uta>g.vgk:g.vgk>g.uta;
-      var score=team==='UTA'?g.uta+'-'+g.vgk:g.vgk+'-'+g.uta;
-      var opp=team==='UTA'?'VGK':'UTA';
-      html+='<div class="sr"><span class="sl">G'+g.g+' vs '+opp+' ('+g.date+')</span><span style="display:flex;align-items:center;gap:8px"><span class="sv">'+score+'</span><span class="chip '+(win?'g':'r')+'">'+(win?'W':'L')+'</span></span></div>';
-    });
-    html+='<div style="font-size:10px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.06em;padding:6px 0 2px">Regular season (last '+(Math.min(src.length,10))+')</div>';
+  var el = document.getElementById(elId);
+  if (!el) return;
+  var src = (games && games.length > 0) ? games : (team === 'UTA' ? UTA10 : VGK10);
+  var html = '';
+
+  // ── Playoff section (top) ──
+  // Show completed playoff games from PLAYOFF array
+  var completedPO = PLAYOFF.filter(function(g) {
+    return (g.status === 'final' || g.status === 'Final' || g.status === 'Game Over') && g.uta !== null && g.vgk !== null;
+  });
+  // Also show live/in-progress G1 if we have a score
+  var liveG1 = null;
+  if (liveGame) {
+    var ld = getUTAVGKScores(liveGame);
+    var liveStatus = ld.status;
+    var isActive = liveStatus === 'In Progress' || liveStatus === 'Halftime';
+    var isFinal = liveStatus === 'Final' || liveStatus === 'Game Over';
+    if ((isActive || isFinal) && ld.uta && ld.vgk) {
+      liveG1 = {
+        uta: parseInt(ld.uta.score || 0),
+        vgk: parseInt(ld.vgk.score || 0),
+        status: liveStatus,
+        live: isActive
+      };
+    }
   }
-  html+=src.slice(0,10).map(function(g){
-    return '<div class="sr"><span class="sl">vs '+g.o+(g.d?' ('+g.d+')':'')+'</span><span style="display:flex;align-items:center;gap:8px"><span class="sv">'+g.s+'</span><span class="chip '+(g.w?'g':'r')+'">'+(g.w?'W':'L')+'</span></span></div>';
+
+  var hasPlayoffData = completedPO.length > 0 || liveG1;
+  if (hasPlayoffData) {
+    html += '<div style="font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.06em;padding:4px 0 4px;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:4px">2026 Playoffs</div>';
+
+    // Live G1
+    if (liveG1) {
+      var liveWin = team === 'UTA' ? liveG1.uta > liveG1.vgk : liveG1.vgk > liveG1.uta;
+      var liveScore = team === 'UTA' ? liveG1.uta + '-' + liveG1.vgk : liveG1.vgk + '-' + liveG1.uta;
+      var liveOpp = team === 'UTA' ? 'VGK' : 'UTA';
+      var liveLabel = liveG1.live ? '<span style="color:#E8362A;font-size:10px;font-weight:700">LIVE</span>' : (liveWin ? '<span class="chip g">W</span>' : '<span class="chip r">L</span>');
+      html += '<div class="sr"><span class="sl">G1 vs ' + liveOpp + ' (Apr 19)</span><span style="display:flex;align-items:center;gap:8px"><span class="sv">' + liveScore + '</span>' + liveLabel + '</span></div>';
+    }
+
+    // Completed playoff games (G2+ when they happen)
+    completedPO.forEach(function(g) {
+      // Skip G1 if we already showed it from liveG1
+      if (liveG1 && g.g === 1) return;
+      var win = team === 'UTA' ? g.uta > g.vgk : g.vgk > g.uta;
+      var score = team === 'UTA' ? g.uta + '-' + g.vgk : g.vgk + '-' + g.uta;
+      var opp = team === 'UTA' ? 'VGK' : 'UTA';
+      html += '<div class="sr"><span class="sl">G' + g.g + ' vs ' + opp + ' (' + g.date + ')</span><span style="display:flex;align-items:center;gap:8px"><span class="sv">' + score + '</span><span class="chip ' + (win ? 'g' : 'r') + '">' + (win ? 'W' : 'L') + '</span></span></div>';
+    });
+
+    html += '<div style="font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.06em;padding:8px 0 4px;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:4px">Last 10 regular season</div>';
+  }
+
+  // ── Regular season last 10 ──
+  html += src.slice(0, 10).map(function(g) {
+    return '<div class="sr"><span class="sl">vs ' + g.o + (g.d ? ' (' + g.d + ')' : '') + '</span><span style="display:flex;align-items:center;gap:8px"><span class="sv">' + g.s + '</span><span class="chip ' + (g.w ? 'g' : 'r') + '">' + (g.w ? 'W' : 'L') + '</span></span></div>';
   }).join('');
-  el.innerHTML=html;
-  var ts=document.getElementById(tsId);if(ts)ts.textContent='Updated '+now12();
+
+  el.innerHTML = html;
+  var ts = document.getElementById(tsId);
+  if (ts) ts.textContent = 'Updated ' + now12();
 }
 
 // ===================== GAME CONTEXT =====================
