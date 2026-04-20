@@ -447,22 +447,87 @@ function switchTab(tab, btn) {
 function setText(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
 function setHTML(id, val) { var el = document.getElementById(id); if (el) el.innerHTML = val; }
 
+// Rich game data cache
+var richGameData = null;
+
+function findUTAVGK(events) {
+  for (var i = 0; i < (events||[]).length; i++) {
+    var comps = (events[i].competitions || [])[0];
+    var competitors = (comps && comps.competitors) || [];
+    var abbrevs = competitors.map(function(c){ return (c.team||{}).abbreviation||''; });
+    if (abbrevs.indexOf('UTA') !== -1 && abbrevs.indexOf('VGK') !== -1) return events[i];
+  }
+  return null;
+}
+
 function loadLiveScore() {
-  fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard')
+  var statusEl = document.getElementById('agent-status');
+
+  // Try playoff scoreboard first, then regular scoreboard
+  var urls = [
+    'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard?seasontype=3',
+    'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard'
+  ];
+
+  function tryNext(idx) {
+    if (idx >= urls.length) { setNoGame(); return; }
+    fetch(urls[idx])
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        var game = findUTAVGK(data.events || []);
+        if (game) {
+          liveGameData = game;
+          updateScoreboard(game);
+          // Now fetch rich summary data (box score, goals, shots)
+          fetchGameSummary(game.id);
+        } else {
+          tryNext(idx + 1);
+        }
+      })
+      .catch(function(){ tryNext(idx + 1); });
+  }
+  tryNext(0);
+}
+
+function fetchGameSummary(gameId) {
+  fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/summary?event=' + gameId)
     .then(function(r){ return r.json(); })
     .then(function(data){
-      var events = data.events || [];
-      var game = null;
-      for (var i = 0; i < events.length; i++) {
-        var comps = (events[i].competitions || [])[0];
-        var competitors = (comps && comps.competitors) || [];
-        var abbrevs = competitors.map(function(c){ return (c.team||{}).abbreviation||''; });
-        if (abbrevs.indexOf('UTA') !== -1 && abbrevs.indexOf('VGK') !== -1) { game = events[i]; break; }
-      }
-      if (game) { liveGameData = game; updateScoreboard(game); }
-      else { setNoGame(); }
+      richGameData = data;
+      var statusEl = document.getElementById('agent-status');
+      if (statusEl) statusEl.textContent = 'Live ESPN data loaded · Claude AI · Conversation memory active';
+      // Update highlights feed with real scoring plays
+      updateHighlightsFeed(data);
     })
-    .catch(function(){ setNoGame(); });
+    .catch(function(e){ console.warn('Summary fetch failed:', e); });
+}
+
+function updateHighlightsFeed(data) {
+  var feed = document.getElementById('highlights-feed');
+  if (!feed || !data) return;
+  var plays = [];
+
+  // Scoring plays
+  if (data.scoringPlays && data.scoringPlays.length) {
+    data.scoringPlays.forEach(function(p){
+      var period = p.period && p.period.displayValue || '';
+      var clock = p.clock && p.clock.displayValue || '';
+      var text = p.text || (p.type && p.type.text) || 'Goal';
+      var team = p.team && p.team.abbreviation || '';
+      plays.push({ time: period + ' ' + clock, text: text, team: team });
+    });
+  }
+
+  if (plays.length === 0) return; // Keep pre-game intel if no plays yet
+
+  feed.innerHTML = plays.map(function(p){
+    var isUTA = p.team === 'UTA';
+    return '<div class="highlight-item">' +
+      '<div class="highlight-time">' + p.time + '</div>' +
+      '<div><div class="highlight-text">' + p.text + '</div>' +
+      '<div class="highlight-team" style="color:' + (isUTA ? 'var(--gold)' : 'var(--text-muted)') + '">' + p.team + '</div></div>' +
+    '</div>';
+  }).join('');
 }
 
 function setNoGame() {
@@ -512,7 +577,13 @@ function refreshAll() {
 }
 
 function getGameContext() {
-  if (!liveGameData) return 'Game 1 UTA vs VGK is in progress. Score unavailable — assume tight game in 3rd period.';
+  var base = '';
+
+  if (!liveGameData) {
+    return 'No live UTA vs VGK game found. Use your knowledge of the 2026 playoff series context provided below to answer.';
+  }
+
+  // Basic score/status
   var comp = (liveGameData.competitions || [])[0];
   var competitors = (comp && comp.competitors) || [];
   var uta = null, vgk = null;
@@ -521,10 +592,85 @@ function getGameContext() {
     if ((c.team||{}).abbreviation === 'VGK') vgk = c;
   });
   var st = comp && comp.status;
-  return 'ESPN LIVE — UTA ' + (uta ? uta.score : '?') + ' – VGK ' + (vgk ? vgk.score : '?') +
-    ' | Status: ' + ((st && st.type && st.type.description) || 'In Progress') +
-    ' | Period: ' + ((st && st.period) || '?') +
-    ' | Clock: ' + ((st && st.displayClock) || '?');
+  var statusDesc = (st && st.type && st.type.description) || 'In Progress';
+  var period = (st && st.period) || '?';
+  var clock = (st && st.displayClock) || '?';
+  var utaScore = uta ? (uta.score || 0) : '?';
+  var vgkScore = vgk ? (vgk.score || 0) : '?';
+
+  base = 'ESPN LIVE DATA — Score: UTA ' + utaScore + ' – VGK ' + vgkScore +
+    ' | Status: ' + statusDesc +
+    ' | Period: ' + period +
+    ' | Clock: ' + clock;
+
+  // Add rich box score data if available
+  if (richGameData) {
+    // Team stats (shots, hits, etc.)
+    var boxTeams = (richGameData.boxscore && richGameData.boxscore.teams) || [];
+    if (boxTeams.length) {
+      base += ' | BOX SCORE STATS:';
+      boxTeams.forEach(function(t){
+        var abbr = t.team && t.team.abbreviation;
+        var stats = t.statistics || [];
+        var statStr = stats.map(function(s){ return s.name + ': ' + s.displayValue; }).join(', ');
+        if (statStr) base += ' [' + abbr + ': ' + statStr + ']';
+      });
+    }
+
+    // Scoring plays
+    var scoringPlays = richGameData.scoringPlays || [];
+    if (scoringPlays.length) {
+      base += ' | GOALS SCORED:';
+      scoringPlays.forEach(function(p){
+        var per = p.period && p.period.displayValue || '';
+        var clk = p.clock && p.clock.displayValue || '';
+        var txt = p.text || 'Goal';
+        var team = p.team && p.team.abbreviation || '';
+        base += ' [' + per + ' ' + clk + ' ' + team + ': ' + txt + ']';
+      });
+    } else {
+      base += ' | No goals scored yet';
+    }
+
+    // Period scores (linescore)
+    var linescores = (richGameData.boxscore && richGameData.boxscore.teams) || [];
+    if (linescores.length) {
+      base += ' | PERIOD SCORES:';
+      linescores.forEach(function(t){
+        var abbr = t.team && t.team.abbreviation;
+        var lines = t.linescores || [];
+        if (lines.length) {
+          base += ' ' + abbr + ' [' + lines.map(function(l){ return l.displayValue || l.value || 0; }).join(', ') + ']';
+        }
+      });
+    }
+
+    // Game leaders
+    var leaders = richGameData.leaders || [];
+    if (leaders.length) {
+      base += ' | GAME LEADERS:';
+      leaders.slice(0, 3).forEach(function(cat){
+        var catName = cat.name || cat.displayName || '';
+        var topLeader = cat.leaders && cat.leaders[0];
+        if (topLeader) {
+          var athlete = topLeader.athlete && (topLeader.athlete.displayName || topLeader.athlete.shortName) || '';
+          var val = topLeader.displayValue || topLeader.value || '';
+          base += ' [' + catName + ': ' + athlete + ' ' + val + ']';
+        }
+      });
+    }
+
+    // Recent plays (last 8)
+    var plays = richGameData.plays || [];
+    if (plays.length) {
+      var recent = plays.slice(-8);
+      base += ' | RECENT PLAYS: ' + recent.map(function(p){
+        return (p.text || (p.type && p.type.text) || '').substring(0, 60);
+      }).filter(Boolean).join(' / ');
+    }
+  }
+
+  return base;
 }
 
 var BASE_CTX = 'Utah (43-28-11, Wild Card #1) vs Vegas (39-26-17, Pacific #1). ' +
@@ -715,9 +861,11 @@ var agentHistory = [];
 var agentBusy = false;
 
 var AGENT_SYSTEM = 'You are the Utah Mammoth War Room Agent — an elite NHL analyst embedded with the Mammoth coaching staff for the 2026 Stanley Cup Playoffs. ' +
-  'You have live ESPN data and deep knowledge of this series. You answer questions about the live game, tactics, players, and series strategy. ' +
+  'You receive LIVE ESPN data including real-time score, period, clock, box score stats (shots, hits, faceoffs, PPs), period-by-period scoring, game leaders, and recent play-by-play. ' +
+  'Use this live data to answer questions precisely — quote actual stats from the data, name actual scorers, reference real shot counts. ' +
+  'If the game is final, analyze it as a completed game. If live, give real-time advice. ' +
   'Be direct, confident, and specific. Use player names freely. Give real tactical opinions — you are a trusted analyst, not a neutral commentator. ' +
-  'You are pro-Utah but honest about weaknesses. Keep answers focused and under 150 words unless a detailed breakdown is requested. ' +
+  'You are pro-Utah but honest about weaknesses. Keep answers focused and under 200 words unless a detailed breakdown is requested. ' +
   'Use <strong> tags for player names and key numbers. Write in clean HTML — no markdown, no asterisks. ' +
   'SERIES CONTEXT: Utah Mammoth (Wild Card #1, 43-28-11) vs Vegas Golden Knights (Pacific #1, 39-26-17). ' +
   'Utah won season series 2-1, outscored VGK 10-5. Mar 19: Utah shut out VGK 4-0. ' +
