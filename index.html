@@ -382,7 +382,7 @@ var VGK10 = [
 
 // Known playoff game data (G1 is real, rest seeded as upcoming)
 var PLAYOFF = [
-  {g:1,date:'Apr 19',loc:'@VGK',uta:null,vgk:null,status:'live',knownGoals:['1st 19:49 - Cooley (Schmidt, Crouse) UTA','2nd 3:44 - Sissons (Smith, McNabb) VGK']},
+  {g:1,date:'Apr 19',loc:'@VGK',uta:2,vgk:4,status:'final',knownGoals:['1st 19:49 – Cooley (Schmidt, Crouse) UTA 1-0','2nd 3:44 – Sissons (Smith, McNabb) VGK 1-1','2nd 5:07 – Stenlund (Durzi) UTA 2-1','3rd 5:07 – Stone PP (Eichel, Marner) VGK 2-2','3rd 6:54 – Dowd (Smith, Sissons) VGK 3-2','3rd 19:22 – Barbashev EN (Stone, Dowd) VGK 4-2']},
   {g:2,date:'Apr 21',loc:'@VGK',uta:null,vgk:null,status:'upcoming'},
   {g:3,date:'Apr 24',loc:'@UTA',uta:null,vgk:null,status:'upcoming'},
   {g:4,date:'Apr 26',loc:'@UTA',uta:null,vgk:null,status:'upcoming'},
@@ -393,14 +393,20 @@ var PLAYOFF = [
 
 // Game 1 known stats (from live blog - will be overridden by ESPN API if available)
 var G1STATS = {
-  p1shots:{uta:11,vgk:9}, p1hits:{uta:10,vgk:15}, p1fo:'VGK 61.1%',
-  starter:'Carter Hart (not Schmid)',
-  goalsP1:['19:49 - Cooley (Schmidt, Crouse) - UTA'],
-  goalsP2:['3:44 - Sissons (Smith, McNabb) - VGK'],
-  lines:{
-    uta:['Keller-Schmaltz-Crouse','Yamamoto-Cooley-Guenther','Peterka-Kerfoot-Carcone','McBain-Stenlund-Tanev'],
-    vgk:['Marner-Eichel-Stone','Barbashev-Howden-Dorofeyev','Smith-Hertl-Kolesar','Smith-Dowd-Sissons']
-  }
+  final: true,
+  uta: 2, vgk: 4,
+  shots:{uta:31,vgk:29}, hits:{uta:28,vgk:50}, fo:'VGK 54.5%',
+  saves:{hart:31,vejmelka:27},
+  starter:'Carter Hart (31 saves, VGK win)',
+  goals:[
+    {per:'1st',time:'19:49',text:'Cooley (Schmidt, Crouse)',team:'UTA',score:'1-0 UTA'},
+    {per:'2nd',time:'3:44', text:'Sissons (Smith, McNabb)',team:'VGK',score:'1-1'},
+    {per:'2nd',time:'5:07', text:'Stenlund (Durzi)',team:'UTA',score:'2-1 UTA'},
+    {per:'3rd',time:'5:07', text:'Stone PP (Eichel, Marner)',team:'VGK',score:'2-2'},
+    {per:'3rd',time:'6:54', text:'Dowd (Smith, Sissons)',team:'VGK',score:'3-2 VGK'},
+    {per:'3rd',time:'19:22',text:'Barbashev EN (Stone, Dowd)',team:'VGK',score:'4-2 FINAL'}
+  ],
+  notes:'Keller-Schmaltz-Crouse on ice for 4 of VGK goals. Stone PP goal was turning point. VGK dominated physically (50-28 hits). Game 2: Apr 21 @ VGK.'
 };
 
 // ===================== INIT =====================
@@ -437,17 +443,32 @@ function switchTab(tab, btn) {
 }
 
 // ===================== ESPN LIVE SCORE =====================
+// ESPN game ID for G1 (used as fallback for full stats when no live game)
+var LAST_GAME_ID = '401869720';
+
 function loadLiveScore() {
   var urls = [
     'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard?seasontype=3',
     'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard'
   ];
   function tryUrl(i) {
-    if (i >= urls.length) { renderNoGame(); return; }
+    if (i >= urls.length) {
+      // No live game found — fetch most recent completed game summary for stats
+      renderNoGame();
+      if (!richData) fetchSummary(LAST_GAME_ID);
+      return;
+    }
     fetch(urls[i]).then(function(r){return r.json();}).then(function(data){
       var found = findUTAVGK(data.events || []);
-      if (found) { liveGame = found; updateScoreboard(found); fetchSummary(found.id); }
-      else { tryUrl(i+1); }
+      if (found) {
+        liveGame = found;
+        updateScoreboard(found);
+        // Always re-fetch summary to get latest stats
+        var gameId = found.id || LAST_GAME_ID;
+        fetchSummary(gameId);
+      } else {
+        tryUrl(i+1);
+      }
     }).catch(function(){tryUrl(i+1);});
   }
   tryUrl(0);
@@ -514,10 +535,16 @@ function updateScoreboard(game) {
 }
 
 function renderNoGame() {
-  setText('gstat','No live game \u00b7 Series underway');
-  setText('suta','\u2014'); setText('svgk','\u2014');
-  setText('pinfo','Game 1: Tied 1\u20131 after 2 periods \u00b7 3rd period');
-  updateFeed(null);
+  setText('gstat','Game 1 Final');
+  setText('suta','2');
+  setText('svgk','4');
+  setText('pinfo','VGK leads series 1\u20130 \u00b7 Game 2 Tue Apr 21 @ VGK 6:30pm PT');
+  // Update scoreboard pill
+  var pill = document.getElementById('livepill');
+  if (pill) { pill.style.background='#444'; pill.textContent='\u2713 FINAL'; pill.style.animation='none'; }
+  var hs = document.getElementById('hdrscr');
+  if (hs) hs.textContent = 'G1: UTA 2 \u2013 VGK 4';
+  updateFeed(richData);
 }
 
 // ===================== FEED =====================
@@ -537,7 +564,9 @@ function updateFeed(data) {
   if (titleEl) titleEl.textContent = isFinalGame ? 'Final \u2014 game summary' : isLive ? 'Live game feed' : 'Game 1 intel';
 
   // Box score stats grid if available
-  if (data && data.boxscore && data.boxscore.teams) {
+  // If no ESPN box score data, use our real G1 final stats
+  var hasRealBoxScore = data && data.boxscore && data.boxscore.teams && (data.boxscore.teams||[]).some(function(t){return (t.statistics||[]).length>0;});
+  if (hasRealBoxScore) {
     var bteams = data.boxscore.teams;
     var utab = bteams.find(function(t){return t.team&&t.team.abbreviation==='UTA';});
     var vgkb = bteams.find(function(t){return t.team&&t.team.abbreviation==='VGK';});
@@ -565,7 +594,7 @@ function updateFeed(data) {
     }
   }
 
-  // Scoring plays from ESPN
+  // Scoring plays — ESPN data first, then G1STATS fallback
   if (data && data.scoringPlays && data.scoringPlays.length) {
     data.scoringPlays.forEach(function(p){
       var per=(p.period&&p.period.displayValue)||'';
@@ -575,15 +604,18 @@ function updateFeed(data) {
       items.push({time:per+(clk?' '+clk:''),text:txt,team:tm,type:'goal',color:tm==='UTA'?'#C8A84B':'#7A99BB'});
     });
   } else {
-    // Use known G1 data
-    G1STATS.goalsP1.forEach(function(g){items.push({time:'1st',text:g,team:g.indexOf('UTA')>-1?'UTA':'VGK',type:'goal',color:g.indexOf('UTA')>-1?'#C8A84B':'#7A99BB'});});
-    G1STATS.goalsP2.forEach(function(g){items.push({time:'2nd',text:g,team:g.indexOf('VGK')>-1?'VGK':'UTA',type:'goal',color:g.indexOf('VGK')>-1?'#7A99BB':'#C8A84B'});});
+    // Use real G1 final goals
+    G1STATS.goals.forEach(function(g){
+      items.push({time:g.per+' '+g.time,text:'<strong>'+g.text+'</strong> <span style="opacity:.5;font-size:11px">'+g.score+'</span>',team:g.team,type:'goal',color:g.team==='UTA'?'#C8A84B':'#7A99BB'});
+    });
   }
 
-  // Known key intel
-  items.push({time:'KEY',text:'<strong>Carter Hart</strong> starting for VGK (not Schmid) \u2014 6-0-0 down stretch, .930 SV%',team:'VGK',type:'note',color:'#7A99BB'});
-  items.push({time:'KEY',text:'<strong>Cooley</strong> 6th player in NHL history to score franchise\'s 1st regular season AND 1st playoff goal',team:'UTA',type:'note',color:'#C8A84B'});
-  items.push({time:'P1',text:'End P1: Shots UTA 11\u20139 VGK \u00b7 Hits UTA 10\u201315 VGK \u00b7 FO% VGK 61.1%',team:'',type:'stat',color:'#7A99BB'});
+  // Final result summary
+  if (G1STATS.final) {
+    items.push({time:'FINAL',text:'<strong>VGK 4 \u2013 UTA 2</strong> \u00b7 Hart 31 saves \u00b7 Vejmelka 27 saves',team:'',type:'stat',color:'#C8A84B'});
+    items.push({time:'KEY',text:'<strong>Turning point:</strong> Stone PP at 5:07 of 3rd tied it. Dowd lead goal 1:47 later. Keller line on ice for 4 VGK goals.',team:'',type:'note',color:'#FF8F8F'});
+    items.push({time:'NEXT',text:'<strong>Game 2:</strong> Tue Apr 21 @ T-Mobile Arena \u00b7 6:30pm PT \u00b7 VGK leads series 1-0',team:'',type:'note',color:'#C8A84B'});
+  }
 
   // Live plays if available
   if (isLive && data && data.plays && data.plays.length) {
@@ -719,19 +751,23 @@ function renderStatsCard(n) {
     html+='</div>';
     var ts=document.getElementById('ts-stats');if(ts)ts.textContent='Live'+(curPeriod?' · thru '+curPeriod:'')+' · '+now12();
   } else {
-    // G1 known period stats
-    html+='<div style="font-size:10px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">G1 Period 1 (known)</div>';
-    html+=srow('Shots','UTA 11 \u2013 VGK 9','gold');
-    html+=srow('Hits','UTA 10 \u2013 VGK 15','warn');
-    html+=srow('Faceoff %','VGK 61.1% (11/18)','bad');
-    html+=srow('Blocks','UTA 7 \u2013 VGK 4','good');
-    html+='<div style="font-size:10px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.06em;margin:8px 0 4px">Season stats</div>';
-    html+=srow('UTA goals/game','3.41  <span class="chip gold">5th NHL</span>','gold');
-    html+=srow('VGK goals/game','3.22  <span class="chip">13th NHL</span>','');
-    html+=srow('VGK PP %','24.6%  <span class="chip r">6th ⚠</span>','bad');
-    html+=srow('UTA PP %','20.0%  <span class="chip">18th</span>','warn');
-    html+=srow('VGK starter','Carter Hart (not Schmid)','warn');
-    var ts=document.getElementById('ts-stats');if(ts)ts.textContent='G1 + season';
+    // G1 FINAL full box score stats
+    html+='<div style="font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">G1 Final \u00b7 VGK 4 \u2013 UTA 2</div>';
+    html+='<div style="display:grid;grid-template-columns:auto 1fr auto;gap:5px 8px;font-size:12px;align-items:center;margin-bottom:8px">';
+    html+='<span style="font-weight:700;font-size:11px;color:#C8A84B">UTA</span><span></span><span style="font-weight:700;font-size:11px;color:#7A99BB">VGK</span>';
+    var g1rows=[['31','Shots','29',true],['27','Saves','31',false],['28','Hits','50',false],['45.5%','FO%','54.5%',false],['0/3','PP','1/4',false],['8','PIM','8',null]];
+    g1rows.forEach(function(r){
+      var ub=r[3]===true,vb=r[3]===false;
+      html+='<span style="font-weight:600;text-align:right;color:'+(ub?'#C8A84B':'#EEF4FF')+'">'+r[0]+'</span>';
+      html+='<span style="text-align:center;color:#3D5A7A;font-size:11px">'+r[1]+'</span>';
+      html+='<span style="text-align:left;color:'+(vb?'#E8362A':'#7A99BB')+'">'+r[2]+'</span>';
+    });
+    html+='</div>';
+    html+=srow('Hart SV%','.939 (31 saves)','bad');
+    html+=srow('Vejmelka SV%','.931 (27 saves)','good');
+    html+=srow('PP turning point','Stone G \u00b7 3rd 5:07','bad');
+    html+=srow('Keller line','On ice for 4 VGK goals','bad');
+    var ts=document.getElementById('ts-stats');if(ts)ts.textContent='G1 Final \u00b7 full box score';
   }
 
   c.querySelectorAll('.sr,.ins,.thinking,div:not(.cardh)').forEach(function(el){el.remove();});
@@ -886,7 +922,7 @@ function buildFormTable(elId, games, team, tsId) {
 
 // ===================== GAME CONTEXT =====================
 function getCtx() {
-  var base='SERIES: Game 1 tied 1-1 after 2 periods. Cooley scored first (1st 19:49, assist Schmidt+Crouse). Sissons tied it (2nd 3:44, assist Smith+McNabb). Carter Hart starting for VGK (not Schmid). P1 stats: Shots UTA 11-9, Hits UTA 10-15 VGK, FO% VGK 61.1%, Blocks UTA 7-4. Projected lines UTA: Keller-Schmaltz-Crouse, Cooley-Yamamoto-Guenther, Peterka-Kerfoot-Carcone. VGK: Marner-Eichel-Stone, Barbashev-Howden-Dorofeyev.';
+  var base='SERIES: VGK leads 1-0. Game 1 FINAL: VGK 4, UTA 2. Goals: Cooley (UTA, 1st 19:49 Schmidt+Crouse), Sissons (VGK, 2nd 3:44 Smith+McNabb), Stenlund (UTA, 2nd 5:07 Durzi), Stone PP (VGK, 3rd 5:07), Dowd (VGK, 3rd 6:54), Barbashev EN (VGK, 3rd 19:22). Full game stats: Shots UTA 31-29 VGK, Hits UTA 28-50 VGK, FO% VGK 54.5%, Hart 31 saves, Vejmelka 27 saves. Carter Hart started for VGK. Key: VGK won physicality battle badly (50-28 hits), Stone PP goal was turning point, Keller-Schmaltz-Crouse line was on ice for 4 of VGKs goals. Game 2: Apr 21 @ VGK, 6:30pm PT.';
   if (!liveGame) return base;
   var d=getUTAVGKScores(liveGame);
   var scoreStr='UTA '+(d.uta?d.uta.score:0)+' VGK '+(d.vgk?d.vgk.score:0);
@@ -913,7 +949,7 @@ function getCtx() {
   return base;
 }
 
-var SERIES_CTX = 'Utah Mammoth (Wild Card #1, 43-28-11) vs Vegas Golden Knights (Pacific #1, 39-26-17). Utah won reg season series 2-1, outscored VGK 10-5. Shutout VGK 4-0 on Mar 19 (accelerated Cassidy firing). VGK started Carter Hart (6-0-0, 1.66 GAA, .930 SV%) not Schmid who hasnt played since Mar 21. William Karlsson out injured. UTA: Keller 88pts, Schmaltz 74pts, Guenther 40G/73pts, Cooley 24G (had 4G in single reg season game vs VGK), Peterka 25G. VGK: Eichel 90pts, Marner 80pts, Stone 73pts, Dorofeyev 37G, Barbashev 61pts. UTA PP 18th (20%), VGK PP 6th (24.6%). VGK PK 7th (81.4%). UTA PK 19th (78.1%). Tourigny identity: speed and transition. Tortorella took over VGK at game 74, went 7-0-1. 10 UTA players making playoff debut. VGK has 11 players from 2023 Cup.';
+var SERIES_CTX = 'SERIES: VGK leads 1-0. G1 FINAL: VGK 4 UTA 2. G1 goals: Cooley (1st 19:49), Sissons (2nd 3:44), Stenlund (2nd 5:07), Stone PP (3rd 5:07 tie), Dowd (3rd 6:54), Barbashev EN (3rd 19:22). G1 stats: Shots UTA 31-29, Hits UTA 28-50, FO VGK 54.5%, Hart 31sv, Vejmelka 27sv. VGK rallied in 3rd with PP goal turning point. Keller-Schmaltz-Crouse on ice for 4 VGK goals. Reg season: UTA won 2-1, outscored VGK 10-5. UTA: Keller 88pts, Schmaltz 74pts, Guenther 40G, Cooley 24G. VGK: Eichel 90pts, Marner 80pts, Stone 73pts, Dorofeyev 37G, Hart starting in goal. Game 2 Tue Apr 21 6:30pm PT @ VGK.';
 
 // ===================== AI ANALYSIS =====================
 var PROMPTS = {
@@ -1030,13 +1066,13 @@ function selectKnight(i) {
 var SHIELDS = [
   {risk:'HIGH',w:'Power play 18th \u2014 VGK PK 7th (81.4%)',d:'Biggest structural mismatch. UTA took a penalty in P1 but killed it. VGK will hunt power plays all game.',
    s:'Stay out of the box in P3 \u2014 every UTA penalty is a high-danger threat. Keller must QB PP with authority on any opportunities. Consider new PP formations to confuse Tortorella.',
-   update:'G1 P1: UTA took roughing penalty but killed it. Durzi penalty also killed. Must maintain discipline in P3.'},
+   update:'G1 FINAL: VGK went 1/4 on PP, UTA went 0/3. Stone\'s PP goal in 3rd was the turning point that tied it 2-2. Discipline is critical in G2.'},
   {risk:'HIGH',w:'10 playoff debutants \u2014 experience gap',d:'VGK has 11 Cup winners. Early game jitters are real, but Cooley scored the opening playoff goal calmly.',
    s:'Cup winners Sergachev, Schmidt, Vanecek set the tone. Match VGK physicality from puck drop. Respond to every hit.',
    update:'G1 UPDATE: Cooley scored first on his playoff debut. Debutants have shown well early. Schmidt assisted on opening goal.'},
   {risk:'HIGH',w:'Faceoff dominance \u2014 VGK won 61.1% in P1',d:'VGK won 11 of 18 P1 draws. This is a critical weakness Utah hasn\'t solved. Possession flows from faceoffs.',
    s:'Schmaltz and Cooley must win more draws in P3. Consider faceoff personnel changes. Losing draws kills transition game.',
-   update:'G1 LIVE: VGK dominating at 61.1% in P1. This is the biggest tactical problem emerging from the actual game. URGENT fix needed.'},
+   update:'G1 FINAL: VGK won 54.5% of faceoffs overall. This cost Utah possession time all game. Must win key D-zone draws in G2 to break the cycle.'},
   {risk:'MED',w:'Cooley line defensive lapses',d:'Cooley scored but can get caught in D-zone chasing plays. Eichel line will hunt this.',
    s:'Match Cooley vs Barbashev/Hertl not Eichel. Use Marino-Schmidt pair for Eichel matchup. Strict line matching at Delta Center.',
    update:'G1: Cooley scored opener. Tourigny must ensure he never faces Eichel-Marner-Stone line in P3.'},
@@ -1063,7 +1099,7 @@ function buildShields() {
 }
 
 // ===================== AGENT =====================
-var AGENT_SYS = 'You are the Utah Mammoth War Room Agent. You have LIVE ESPN game data and real G1 knowledge: Cooley scored first (P1 19:49, Schmidt+Crouse assist), Sissons tied it (P2 3:44, Smith+McNabb assist). Game tied 1-1. Carter Hart starting for VGK (not Schmid). P1 stats: Shots UTA 11-9, Hits VGK 15-10, FO% VGK 61.1%. Lines: UTA top=Keller-Schmaltz-Crouse, UTA 2nd=Yamamoto-Cooley-Guenther. VGK top=Marner-Eichel-Stone. '+SERIES_CTX+' Be direct, confident, specific. Use player names. Give real tactical opinions. Pro-Utah but honest. Under 200 words unless asked for detail. Use <strong> for names and numbers. Clean HTML paragraphs only.';
+var AGENT_SYS = 'You are the Utah Mammoth War Room Agent. G1 FINAL: VGK 4, UTA 2. VGK leads series 1-0. Goals: Cooley (1st 19:49), Sissons (2nd 3:44), Stenlund (2nd 5:07 UTA lead), Stone PP (3rd 5:07 tie), Dowd (3rd 6:54 VGK lead), Barbashev EN (3rd 19:22). Final stats: Shots UTA 31-29 VGK, Hits UTA 28-50 VGK, FO% VGK 54.5%, Hart 31 saves (.939), Vejmelka 27 saves. KEY STORY: VGK rallied in 3rd. Stone PP was turning point. Keller-Schmaltz-Crouse line was on ice for 4 VGK goals. Game 2 is Tue Apr 21 @ T-Mobile Arena 6:30pm PT. '+SERIES_CTX+' Be direct, confident, specific. Use player names. Give real tactical opinions. Pro-Utah but honest. Under 200 words unless asked for detail. Use <strong> for names and numbers. Clean HTML paragraphs only.';
 
 function agKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();agSend();}}
 function sugSend(el){var inp=document.getElementById('aginput');if(inp){inp.value=el.textContent;agSend();}}
